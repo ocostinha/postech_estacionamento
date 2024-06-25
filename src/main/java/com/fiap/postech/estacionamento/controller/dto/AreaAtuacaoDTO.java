@@ -1,9 +1,8 @@
-package com.fiap.postech.estacionamento.dto;
+package com.fiap.postech.estacionamento.controller.dto;
 
 import jakarta.validation.constraints.NotBlank;
 
 import java.time.LocalDateTime;
-import java.util.Date;
 
 public record AreaAtuacaoDTO(
         Long id,

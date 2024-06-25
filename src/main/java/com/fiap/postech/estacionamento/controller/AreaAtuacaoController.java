@@ -1,54 +1,54 @@
 package com.fiap.postech.estacionamento.controller;
 
-import com.fiap.postech.estacionamento.dto.AreaAtuacaoDTO;
-import com.fiap.postech.estacionamento.service.AreaAtuacaoService;
-import org.springframework.data.domain.Page;
-import org.springframework.data.domain.Pageable;
-import org.springframework.data.web.PageableDefault;
+import com.fiap.postech.estacionamento.commoms.mappers.AreaAtuacaoMapper;
+import com.fiap.postech.estacionamento.controller.dto.AreaAtuacaoDTO;
+import com.fiap.postech.estacionamento.core.service.AreaAtuacaoService;
+import jakarta.validation.Valid;
+import lombok.AllArgsConstructor;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
-import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
-import java.awt.geom.Area;
 import java.util.List;
 
 
 @RestController
 @RequestMapping("/areaAtuacao")
+@AllArgsConstructor
 public class AreaAtuacaoController {
+    @Autowired
     private final AreaAtuacaoService areaAtuacaoService;
 
-    public AreaAtuacaoController(AreaAtuacaoService areaAtuacaoService) {
-        this.areaAtuacaoService = areaAtuacaoService;
-    }
+    @Autowired
+    private final AreaAtuacaoMapper mapper;
 
     @GetMapping
-    public ResponseEntity<List<AreaAtuacaoDTO>> findAll() {
-        List<AreaAtuacaoDTO> areasDTOS = areaAtuacaoService.findAll();
-        return ResponseEntity.ok(areasDTOS);
+    @ResponseStatus(HttpStatus.OK)
+    public List<AreaAtuacaoDTO> findAll() {
+        return areaAtuacaoService.findAll().stream().map(mapper::toDto).toList();
     }
 
     @GetMapping("/{id}")
-    public ResponseEntity<AreaAtuacaoDTO> findById(@PathVariable Long id) {
-        AreaAtuacaoDTO areaAtuacaoDTO = areaAtuacaoService.findById(id);
-        return ResponseEntity.ok(areaAtuacaoDTO);
+    @ResponseStatus(HttpStatus.OK)
+    public AreaAtuacaoDTO findById(@PathVariable Long id) {
+        return mapper.toDto(areaAtuacaoService.findById(id));
     }
 
     @PostMapping
-    public ResponseEntity<AreaAtuacaoDTO> save(@RequestBody AreaAtuacaoDTO areaAtuacaoDTO) {
-        AreaAtuacaoDTO savedAreaAtuacaoDTO = areaAtuacaoService.save(areaAtuacaoDTO);
-        return new ResponseEntity<>(savedAreaAtuacaoDTO, HttpStatus.CREATED);
+    @ResponseStatus(HttpStatus.CREATED)
+    public AreaAtuacaoDTO save(@Valid @RequestBody AreaAtuacaoDTO areaAtuacaoDTO) {
+        return mapper.toDto(areaAtuacaoService.save(mapper.toDomain(areaAtuacaoDTO)));
     }
 
     @PatchMapping("/{id}")
-    public ResponseEntity<AreaAtuacaoDTO> update(@PathVariable Long id, @RequestParam String nomeArea) {
-       AreaAtuacaoDTO updatedAreaAtuacaoDTO = areaAtuacaoService.update(id, nomeArea);
-       return ResponseEntity.accepted().body(updatedAreaAtuacaoDTO);
+    @ResponseStatus(HttpStatus.ACCEPTED)
+    public AreaAtuacaoDTO update(@PathVariable Long id, @RequestParam String nomeArea) {
+       return mapper.toDto(areaAtuacaoService.update(id, nomeArea));
     }
 
     @DeleteMapping("/{id}")
-    public ResponseEntity<AreaAtuacaoDTO> delete(@PathVariable Long id) {
-        AreaAtuacaoDTO desactivateAreaAtuacaoDTO = areaAtuacaoService.desativar(id);
-        return ResponseEntity.accepted().body(desactivateAreaAtuacaoDTO);
+    @ResponseStatus(HttpStatus.ACCEPTED)
+    public AreaAtuacaoDTO delete(@PathVariable Long id) {
+        return mapper.toDto(areaAtuacaoService.desativar(id));
     }
 }
