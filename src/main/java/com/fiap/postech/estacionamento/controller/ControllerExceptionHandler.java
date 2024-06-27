@@ -1,9 +1,6 @@
 package com.fiap.postech.estacionamento.controller;
 
-import com.fiap.postech.estacionamento.commoms.exception.BadRequestException;
-import com.fiap.postech.estacionamento.commoms.exception.NotFoundException;
-import com.fiap.postech.estacionamento.commoms.exception.StandardError;
-import com.fiap.postech.estacionamento.commoms.exception.UnprocessableEntityException;
+import com.fiap.postech.estacionamento.commoms.exception.*;
 import jakarta.servlet.http.HttpServletRequest;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -64,6 +61,22 @@ public class ControllerExceptionHandler {
         err.setTimestamp(Instant.now());
         err.setStatus(status.value());
         err.setError("Bad Request");
+        err.setMessage(e.getMessage());
+        err.setPath(request.getRequestURI());
+
+        return err;
+    }
+
+    @ExceptionHandler(UnauthorizedException.class)
+    @ResponseStatus(HttpStatus.UNAUTHORIZED)
+    @ResponseBody
+    public StandardError unauthorizedException(
+            UnauthorizedException e,
+            HttpServletRequest request) {
+        HttpStatus status = HttpStatus.UNAUTHORIZED;
+        err.setTimestamp(Instant.now());
+        err.setStatus(status.value());
+        err.setError("Unauthorized");
         err.setMessage(e.getMessage());
         err.setPath(request.getRequestURI());
 

@@ -1,59 +1,72 @@
 package com.fiap.postech.estacionamento.Service;
 
 
-import com.fiap.postech.estacionamento.Entity.Usuario;
-import com.fiap.postech.estacionamento.Repository.UsuarioRepository;
+import com.fiap.postech.estacionamento.commoms.exception.NotFoundException;
+import com.fiap.postech.estacionamento.commoms.exception.UnauthorizedException;
+import com.fiap.postech.estacionamento.commoms.mappers.UsuarioMapper;
+import com.fiap.postech.estacionamento.core.domain.Usuario;
+import com.fiap.postech.estacionamento.resources.repository.entities.UsuarioEntity;
+import com.fiap.postech.estacionamento.resources.repository.UsuarioRepository;
+import lombok.AllArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import java.time.LocalDateTime;
-import java.util.Optional;
-
 @Service
+@AllArgsConstructor
 public class UsuarioService {
 
     @Autowired
-    private UsuarioRepository usuarioRepository;
+    private final UsuarioRepository usuarioRepository;
+
+    @Autowired
+    private final UsuarioMapper mapper;
 
     public Usuario criarUsuario(Usuario usuario) {
-        usuario.setDataCriacao(LocalDateTime.now());
-        usuario.setDataAlteracao(LocalDateTime.now());
-        return usuarioRepository.save(usuario);
+        return mapper.toDomain(
+                usuarioRepository.save(
+                        mapper.toEntity(usuario)
+                )
+        );
     }
 
-    public Optional<Usuario> obterPorEmail(String email) {
-        return usuarioRepository.findByEmail(email);
+    public Usuario obterPorEmail(String email) {
+        return mapper.toDomain(
+                usuarioRepository.findByEmailAndAtivo(email, true)
+                        .orElseThrow(() -> new NotFoundException("Usuário não encontrado"))
+        );
     }
 
-    public Optional<Usuario> login(String email, String senha) {
-        Optional<Usuario> usuario = usuarioRepository.findByEmail(email);
-        if (usuario.isPresent() && usuario.get().getSenha().equals(senha)) {
-            return usuario;
-        }
-        return Optional.empty();
+    public Usuario login(String email, String senha) {
+        return mapper.toDomain(
+                usuarioRepository.findByEmailAndSenhaAndAtivo(email, senha, true)
+                        .orElseThrow(() -> new UnauthorizedException("Usuário ou senha inválido"))
+        );
     }
 
-    public Usuario atualizarUsuario(Long id, Usuario usuarioAtualizado) {
-        Usuario usuario = usuarioRepository.findById(id).orElseThrow(() -> new RuntimeException("Usuário não encontrado"));
-        usuario.setNomeCompleto(usuarioAtualizado.getNomeCompleto());
-        usuario.setDocumento(usuarioAtualizado.getDocumento());
-        usuario.setEmail(usuarioAtualizado.getEmail());
-        usuario.setIdFormaPagamento(usuarioAtualizado.getIdFormaPagamento());
-        usuario.setVeiculos(usuarioAtualizado.getVeiculos());
-        usuario.setDataAlteracao(LocalDateTime.now());
-        return usuarioRepository.save(usuario);
+    public Usuario atualizarUsuario(Long id, Usuario usuario) {
+        return mapper.toDomain(
+                usuarioRepository.save(
+                        mapper.update(usuario, usuarioRepository.findById(id)
+                                .orElseThrow(() -> new UnauthorizedException("Usuário não encontrado")))
+                )
+        );
     }
 
     public Usuario trocarSenha(Long id, String novaSenha) {
-        Usuario usuario = usuarioRepository.findById(id).orElseThrow(() -> new RuntimeException("Usuário não encontrado"));
+        UsuarioEntity usuario = usuarioRepository.findById(id)
+                .orElseThrow(() -> new UnauthorizedException("Usuário não encontrado"));
+
         usuario.setSenha(novaSenha);
-        usuario.setDataAlteracao(LocalDateTime.now());
-        return usuarioRepository.save(usuario);
+
+        return mapper.toDomain(usuarioRepository.save(usuario));
     }
 
     public Usuario desativar(Long id) {
-        Usuario usuario = usuarioRepository.findById(id).orElseThrow(() -> new RuntimeException("Usuário não encontrado"));
-        usuario.setAtivo(false);
-        return usuarioRepository.save(usuario);
+        UsuarioEntity usuarioEntity = usuarioRepository.findById(id)
+                .orElseThrow(() -> new UnauthorizedException("Usuário não encontrado"));
+
+        usuarioEntity.setAtivo(false);
+
+        return mapper.toDomain(usuarioRepository.save(usuarioEntity));
     }
 }
