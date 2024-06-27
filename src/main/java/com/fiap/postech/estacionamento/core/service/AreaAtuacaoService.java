@@ -1,6 +1,6 @@
 package com.fiap.postech.estacionamento.core.service;
 
-import com.fiap.postech.estacionamento.commoms.exception.ControllerNotFoundException;
+import com.fiap.postech.estacionamento.commoms.exception.NotFoundException;
 import com.fiap.postech.estacionamento.commoms.exception.UnprocessableEntityException;
 import com.fiap.postech.estacionamento.commoms.mappers.AreaAtuacaoMapper;
 import com.fiap.postech.estacionamento.core.domain.AreaAtuacao;
@@ -28,7 +28,7 @@ public class AreaAtuacaoService {
         List<AreaAtuacaoEntity> areasAtuacoes = areaAtuacaoRepository.findByAtivo(true);
 
         if (areasAtuacoes.isEmpty()) {
-            throw new ControllerNotFoundException("Nenhuma área de atuação encontrada");
+            throw new NotFoundException("Nenhuma área de atuação encontrada");
         }
 
         return areasAtuacoes.stream().map(mapper::toDomain).collect(Collectors.toList());
@@ -38,7 +38,13 @@ public class AreaAtuacaoService {
         return mapper.toDomain(
                 areaAtuacaoRepository.findByIdAndAtivo(id, true)
                         .orElseThrow(() ->
-                                new ControllerNotFoundException("Área de atuação não encontrada")));
+                                new NotFoundException("Área de atuação não encontrada")));
+    }
+
+    public void validAreaAtuacao(Long id) {
+        areaAtuacaoRepository.findByIdAndAtivo(id, true)
+                .orElseThrow(() ->
+                        new NotFoundException("Área de atuação não encontrada"));
     }
 
     public AreaAtuacao save(AreaAtuacao areaAtuacao) {

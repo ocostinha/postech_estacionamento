@@ -1,6 +1,7 @@
 package com.fiap.postech.estacionamento.controller;
 
-import com.fiap.postech.estacionamento.commoms.exception.ControllerNotFoundException;
+import com.fiap.postech.estacionamento.commoms.exception.BadRequestException;
+import com.fiap.postech.estacionamento.commoms.exception.NotFoundException;
 import com.fiap.postech.estacionamento.commoms.exception.StandardError;
 import com.fiap.postech.estacionamento.commoms.exception.UnprocessableEntityException;
 import jakarta.servlet.http.HttpServletRequest;
@@ -10,6 +11,7 @@ import org.springframework.validation.FieldError;
 import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ExceptionHandler;
+import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.ResponseStatus;
 
 import java.time.Instant;
@@ -20,10 +22,11 @@ import java.util.Map;
 public class ControllerExceptionHandler {
     private static final StandardError err = new StandardError();
 
-    @ExceptionHandler(ControllerNotFoundException.class)
+    @ExceptionHandler(NotFoundException.class)
     @ResponseStatus(HttpStatus.NO_CONTENT)
+    @ResponseBody
     public StandardError entityNotFound(
-            ControllerNotFoundException e,
+            NotFoundException e,
             HttpServletRequest request) {
         HttpStatus status = HttpStatus.NO_CONTENT;
         err.setTimestamp(Instant.now());
@@ -36,7 +39,8 @@ public class ControllerExceptionHandler {
     }
 
     @ExceptionHandler(UnprocessableEntityException.class)
-    @ResponseStatus(HttpStatus.NO_CONTENT)
+    @ResponseStatus(HttpStatus.UNPROCESSABLE_ENTITY)
+    @ResponseBody
     public StandardError unprocessableEntity(
             UnprocessableEntityException e,
             HttpServletRequest request) {
@@ -50,8 +54,25 @@ public class ControllerExceptionHandler {
         return err;
     }
 
+    @ExceptionHandler(BadRequestException.class)
+    @ResponseStatus(HttpStatus.BAD_REQUEST)
+    @ResponseBody
+    public StandardError badRequest(
+            BadRequestException e,
+            HttpServletRequest request) {
+        HttpStatus status = HttpStatus.BAD_REQUEST;
+        err.setTimestamp(Instant.now());
+        err.setStatus(status.value());
+        err.setError("Bad Request");
+        err.setMessage(e.getMessage());
+        err.setPath(request.getRequestURI());
+
+        return err;
+    }
+
     @ResponseStatus(HttpStatus.BAD_REQUEST)
     @ExceptionHandler(MethodArgumentNotValidException.class)
+    @ResponseBody
     public ResponseEntity<StandardError> handleValidationExceptions(
             MethodArgumentNotValidException ex,
             HttpServletRequest request) {
@@ -63,10 +84,10 @@ public class ControllerExceptionHandler {
         });
 
 
-        HttpStatus status = HttpStatus.UNPROCESSABLE_ENTITY;
+        HttpStatus status = HttpStatus.BAD_REQUEST;
         err.setTimestamp(Instant.now());
         err.setStatus(status.value());
-        err.setError("Unprocessable Entity");
+        err.setError("Bad Request");
         err.setMessage(errors.toString());
         err.setPath(request.getRequestURI());
 

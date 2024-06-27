@@ -7,8 +7,11 @@ import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;
 import org.mapstruct.MappingTarget;
 
+import static com.fiap.postech.estacionamento.commoms.mappers.utils.MappingUtils.LOCAL_DATE_TIME_NOW;
+
 @Mapper(componentModel = "spring")
 public interface AreaAtuacaoMapper {
+    @Mapping(target = "ativo", constant = "true")
     AreaAtuacao toDomain(AreaAtuacaoDTO dto);
 
     @Mapping(source = "nomeArea", target = "nome")
@@ -16,13 +19,12 @@ public interface AreaAtuacaoMapper {
 
     AreaAtuacaoDTO toDto(AreaAtuacao domain);
 
-    @Mapping(target = "ativo", defaultValue = "true")
-    @Mapping(target = "dataCriacao", defaultExpression = "java(LocalDateTime.now())")
-    @Mapping(target = "dataUltimaModificacao", defaultExpression = "java(LocalDateTime.now())")
+    @Mapping(target = "dataCriacao", defaultExpression = LOCAL_DATE_TIME_NOW)
+    @Mapping(target = "dataUltimaModificacao", defaultExpression = LOCAL_DATE_TIME_NOW)
     @Mapping(source = "nome", target = "nomeArea")
     AreaAtuacaoEntity toEntity(AreaAtuacao domain);
 
-    @Mapping(target = "dataUltimaModificacao", expression = "java(LocalDateTime.now())")
+    @Mapping(target = "dataUltimaModificacao", expression = LOCAL_DATE_TIME_NOW)
     @Mapping(target = "id", ignore = true)
     @Mapping(target = "cidade", ignore = true)
     @Mapping(target = "estado", ignore = true)
