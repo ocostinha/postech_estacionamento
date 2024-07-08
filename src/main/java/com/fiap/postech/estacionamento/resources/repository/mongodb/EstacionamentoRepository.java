@@ -7,4 +7,5 @@ import java.util.List;
 
 public interface EstacionamentoRepository extends MongoRepository<EstacionamentoEntity, String> {
     List<EstacionamentoEntity> findByDataLimiteSaidaBefore(LocalDateTime dateTime);
+    List<EstacionamentoEntity> findByDataLimiteSaidaBetween(LocalDateTime start, LocalDateTime end);
 }

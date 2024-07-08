@@ -39,5 +39,23 @@ public class NotificacaoScheduler {
             notificacaoRepository.save(notificacao);
         }
     }
+    @Scheduled(cron = "0 * * * * *")
+    public void sendExpirationAlerts() {
+        LocalDateTime now = LocalDateTime.now();
+        LocalDateTime tenMinutesLater = now.plusMinutes(10);
+
+        List<EstacionamentoEntity> expiringEstacionamentos = estacionamentoRepository.findByDataLimiteSaidaBetween(now, tenMinutesLater);
+        for (EstacionamentoEntity estacionamento : expiringEstacionamentos) {
+            emailService.sendEmail(estacionamento.getEmailCliente(), "Aviso de Expiração de Estacionamento",
+                    "Seu tempo de estacionamento está prestes a expirar em 10 minutos!");
+
+            NotificacaoEntity notificacao = new NotificacaoEntity();
+            notificacao.setRegistroEstacionamentoId(estacionamento.getId());
+            notificacao.setEmailCliente(estacionamento.getEmailCliente());
+            notificacao.setDataEnvio(now);
+
+            notificacaoRepository.save(notificacao);
+        }
+    }
 }
 
