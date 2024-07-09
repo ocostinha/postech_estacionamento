@@ -28,5 +28,5 @@ public interface FormaPagamentoMapper {
     @Mapping(target = "id", ignore = true)
     @Mapping(target = "dataCriacao", ignore = true)
     @Mapping(target = "ativo", ignore = true)
-    FormaPagamentoEntity update(FormaPagamentoDTO formaPagamentoDTO, @MappingTarget FormaPagamentoEntity entity);
+    FormaPagamentoEntity update(FormaPagamento formaPagamentoDTO, @MappingTarget FormaPagamentoEntity entity);
 }

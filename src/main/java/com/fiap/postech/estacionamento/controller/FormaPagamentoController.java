@@ -49,6 +49,6 @@ public class FormaPagamentoController {
     @PutMapping("/{id}")
     @ResponseStatus(HttpStatus.ACCEPTED)
     public FormaPagamentoDTO update(@PathVariable Long id, @RequestBody FormaPagamentoDTO formaPagamentoDTO) {
-        return mapper.toDto(formaPagamentoService.update(id, formaPagamentoDTO));
+        return mapper.toDto(formaPagamentoService.update(id, mapper.toDomain(formaPagamentoDTO)));
     }
 }
