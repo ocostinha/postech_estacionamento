@@ -3,6 +3,7 @@ package com.fiap.postech.estacionamento.controller;
 
 import com.fiap.postech.estacionamento.commoms.mappers.UsuarioMapper;
 import com.fiap.postech.estacionamento.controller.dto.UsuarioAtualizacaoRequestDTO;
+import com.fiap.postech.estacionamento.controller.dto.UsuarioMinimalResponseDTO;
 import com.fiap.postech.estacionamento.controller.dto.UsuarioRequestDTO;
 import com.fiap.postech.estacionamento.controller.dto.UsuarioResponseDTO;
 import com.fiap.postech.estacionamento.Service.UsuarioService;
@@ -58,6 +59,12 @@ public class UsuarioController {
     @ResponseStatus(HttpStatus.ACCEPTED)
     public UsuarioResponseDTO trocarSenha(@PathVariable Long id, @RequestParam String novaSenha) {
         return mapper.toResponse(usuarioService.trocarSenha(id, novaSenha));
+    }
+
+    @GetMapping("/{id}")
+    @ResponseStatus(HttpStatus.OK)
+    public UsuarioMinimalResponseDTO getUserById(@PathVariable Long id) {
+        return mapper.toMinimalResponse(usuarioService.getUserById(id));
     }
 
     @DeleteMapping("/{id}")
