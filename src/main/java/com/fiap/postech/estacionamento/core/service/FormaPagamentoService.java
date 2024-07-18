@@ -25,6 +25,9 @@ public class FormaPagamentoService {
     @Autowired
     private final FormaPagamentoMapper mapper;
 
+    @Autowired
+    private EmailService emailService;
+
     public List<FormaPagamento> findAll() {
         List<FormaPagamentoEntity> formasPagamentos = formaPagamentoRepository.findByAtivo(true);
         return formasPagamentos.stream().map(mapper::toDomain).collect(Collectors.toList());
@@ -35,11 +38,13 @@ public class FormaPagamentoService {
             formaPagamento.setListaValores(new ArrayList<>());
         }
 
+        emailService.sendEmail("nicholasbarbosads2001@gmail.com", "Forma de pagamento salva", "Salva");
         return mapper.toDomain(
                 formaPagamentoRepository.save(
                         mapper.toEntity(formaPagamento)
                 )
         );
+
     }
 
     public FormaPagamento findById(Long id) {
