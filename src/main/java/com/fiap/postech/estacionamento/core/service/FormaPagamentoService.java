@@ -3,7 +3,6 @@ package com.fiap.postech.estacionamento.core.service;
 import com.fiap.postech.estacionamento.commoms.exception.NotFoundException;
 import com.fiap.postech.estacionamento.commoms.exception.UnprocessableEntityException;
 import com.fiap.postech.estacionamento.commoms.mappers.FormaPagamentoMapper;
-import com.fiap.postech.estacionamento.controller.dto.FormaPagamentoDTO;
 import com.fiap.postech.estacionamento.core.domain.FormaPagamento;
 import com.fiap.postech.estacionamento.resources.repository.FormaPagamentoRepository;
 import com.fiap.postech.estacionamento.resources.repository.entities.FormaPagamentoEntity;
@@ -12,6 +11,7 @@ import lombok.AllArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -31,6 +31,10 @@ public class FormaPagamentoService {
     }
 
     public FormaPagamento save(FormaPagamento formaPagamento) {
+        if (!formaPagamento.isAceitaValoresPreEstabelecidos()) {
+            formaPagamento.setListaValores(new ArrayList<>());
+        }
+
         return mapper.toDomain(
                 formaPagamentoRepository.save(
                         mapper.toEntity(formaPagamento)
@@ -60,11 +64,15 @@ public class FormaPagamentoService {
         }
     }
 
-    public FormaPagamento update(Long id, FormaPagamentoDTO formaPagamentoDTO) {
+    public FormaPagamento update(Long id, FormaPagamento formaPagamento) {
         try {
+            if (!formaPagamento.isAceitaValoresPreEstabelecidos()) {
+                formaPagamento.setListaValores(new ArrayList<>());
+            }
+
             return mapper.toDomain(
                     formaPagamentoRepository.save(
-                            mapper.update(formaPagamentoDTO, formaPagamentoRepository.getReferenceById(id))
+                            mapper.update(formaPagamento, formaPagamentoRepository.getReferenceById(id))
                     )
             );
         } catch (EntityNotFoundException e) {
