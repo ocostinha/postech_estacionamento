@@ -79,4 +79,11 @@ public class FormaPagamentoService {
             throw new UnprocessableEntityException("Forma de pagamento não encontrada");
         }
     }
+
+    public Double valorEstacionamentoPix() {
+        return formaPagamentoRepository
+                .findByDescricaoAndAtivo("PIX", true)
+                .orElseThrow(() -> new UnprocessableEntityException("Forma de pagamento PIX não encontrado"))
+                .getListaValores().getFirst();
+    }
 }

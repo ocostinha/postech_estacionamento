@@ -9,4 +9,5 @@ import java.util.Optional;
 public interface FormaPagamentoRepository extends JpaRepository<FormaPagamentoEntity, Long> {
     Optional<FormaPagamentoEntity> findByIdAndAtivo(Long id, Boolean ativo);
     List<FormaPagamentoEntity> findByAtivo(Boolean ativo);
+    Optional<FormaPagamentoEntity> findByDescricaoAndAtivo(String descricao, Boolean ativo);
 }
