@@ -1,6 +1,7 @@
 package com.fiap.postech.estacionamento.commoms.mappers;
 
 import com.fiap.postech.estacionamento.controller.dto.UsuarioAtualizacaoRequestDTO;
+import com.fiap.postech.estacionamento.controller.dto.UsuarioMinimalResponseDTO;
 import com.fiap.postech.estacionamento.controller.dto.UsuarioRequestDTO;
 import com.fiap.postech.estacionamento.controller.dto.UsuarioResponseDTO;
 import com.fiap.postech.estacionamento.core.domain.Usuario;
@@ -22,6 +23,8 @@ public interface UsuarioMapper {
     Usuario toDomain(UsuarioEntity entity);
 
     UsuarioResponseDTO toResponse(Usuario domain);
+
+    UsuarioMinimalResponseDTO toMinimalResponse(Usuario domain);
 
     @Mapping(target = "dataCriacao", defaultExpression = LOCAL_DATE_TIME_NOW)
     @Mapping(target = "dataUltimaModificacao", defaultExpression = LOCAL_DATE_TIME_NOW)

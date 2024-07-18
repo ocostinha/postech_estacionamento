@@ -1,14 +1,14 @@
-package com.fiap.postech.estacionamento.Service;
-
+package com.fiap.postech.estacionamento.core.service;
 
 import com.fiap.postech.estacionamento.commoms.exception.NotFoundException;
 import com.fiap.postech.estacionamento.commoms.exception.UnauthorizedException;
 import com.fiap.postech.estacionamento.commoms.mappers.UsuarioMapper;
 import com.fiap.postech.estacionamento.core.domain.Usuario;
-import com.fiap.postech.estacionamento.resources.repository.entities.UsuarioEntity;
 import com.fiap.postech.estacionamento.resources.repository.UsuarioRepository;
+import com.fiap.postech.estacionamento.resources.repository.entities.UsuarioEntity;
 import lombok.AllArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.cache.annotation.Cacheable;
 import org.springframework.stereotype.Service;
 
 @Service
@@ -59,6 +59,14 @@ public class UsuarioService {
         usuario.setSenha(novaSenha);
 
         return mapper.toDomain(usuarioRepository.save(usuario));
+    }
+
+    @Cacheable(value = "getUserById", key = "#id")
+    public Usuario getUserById(Long id) {
+        return mapper.toDomain(
+                usuarioRepository.findById(id)
+                        .orElseThrow(() -> new NotFoundException("Usuário não encontrado"))
+        );
     }
 
     public Usuario desativar(Long id) {
