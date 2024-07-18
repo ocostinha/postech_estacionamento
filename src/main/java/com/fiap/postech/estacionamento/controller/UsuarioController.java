@@ -6,7 +6,7 @@ import com.fiap.postech.estacionamento.controller.dto.UsuarioAtualizacaoRequestD
 import com.fiap.postech.estacionamento.controller.dto.UsuarioMinimalResponseDTO;
 import com.fiap.postech.estacionamento.controller.dto.UsuarioRequestDTO;
 import com.fiap.postech.estacionamento.controller.dto.UsuarioResponseDTO;
-import com.fiap.postech.estacionamento.Service.UsuarioService;
+import com.fiap.postech.estacionamento.core.service.UsuarioService;
 import jakarta.validation.Valid;
 import lombok.AllArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
