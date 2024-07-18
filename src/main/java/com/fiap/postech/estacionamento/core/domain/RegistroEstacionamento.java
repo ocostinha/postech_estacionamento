@@ -1,24 +1,19 @@
 package com.fiap.postech.estacionamento.core.domain;
 
-import java.time.LocalDateTime;
-
-import lombok.AllArgsConstructor;
 import lombok.Getter;
-import lombok.NoArgsConstructor;
 import lombok.Setter;
+
+import java.time.LocalDateTime;
+import java.util.UUID;
 
 @Getter
 @Setter
-@NoArgsConstructor
-@AllArgsConstructor
 public class RegistroEstacionamento {
-
-	private String id;
-	private String idUsuario;
+	private UUID id;
+	private Long idUsuario;
 	private String placaVeiculo;
 	private String idAreaEstacionamento;
 	private LocalDateTime dataInicioEstacionamento;
 	private LocalDateTime dataFinalEstacionamento;
 	private String idFormaPagamento;
-
 }

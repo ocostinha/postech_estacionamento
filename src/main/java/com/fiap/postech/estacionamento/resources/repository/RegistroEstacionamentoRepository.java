@@ -1,11 +1,10 @@
 package com.fiap.postech.estacionamento.resources.repository;
 
-import java.util.Optional;
-
+import com.fiap.postech.estacionamento.resources.repository.entities.RegistroEstacionamentoEntity;
 import org.springframework.data.mongodb.repository.MongoRepository;
 import org.springframework.stereotype.Repository;
 
-import com.fiap.postech.estacionamento.resources.repository.entities.RegistroEstacionamentoEntity;
+import java.util.Optional;
 
 @Repository
 public interface RegistroEstacionamentoRepository extends MongoRepository<RegistroEstacionamentoEntity, String> {

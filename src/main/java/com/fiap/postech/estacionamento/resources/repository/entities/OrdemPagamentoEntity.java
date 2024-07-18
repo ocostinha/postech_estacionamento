@@ -1,22 +1,18 @@
 package com.fiap.postech.estacionamento.resources.repository.entities;
 
-import org.springframework.data.annotation.Id;
-import org.springframework.data.mongodb.core.mapping.Document;
-
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.GenerationType;
 import lombok.Data;
+import org.springframework.data.mongodb.core.mapping.Document;
+import org.springframework.data.mongodb.core.mapping.MongoId;
+
+import java.util.UUID;
 
 @Data
 @Document(collection = "ordens_pagamento")
 public class OrdemPagamentoEntity {
-	@Id
-	@GeneratedValue(strategy = GenerationType.IDENTITY)
-
-	private String id;
-	private String idUsuario;
-	private String idRegistroEstacionamento;
+	@MongoId
+	private UUID id;
+	private Long idUsuario;
+	private UUID idRegistroEstacionamento;
 	private Double valorFinal;
 	private int status;
-
 }

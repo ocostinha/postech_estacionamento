@@ -1,21 +1,19 @@
 package com.fiap.postech.estacionamento.controller.dto;
 
-import java.time.LocalDateTime;
-
 import lombok.Getter;
 import lombok.Setter;
 
+import java.time.LocalDateTime;
+import java.util.UUID;
+
 @Getter
 @Setter
-
 public class RegistroEstacionamentoResponseDTO {
-    private String id;
-    private String idUsuario;
+    private UUID id;
+    private Long idUsuario;
     private String placaVeiculo;
-    private String idAreaEstacionamento;
+    private Long idAreaEstacionamento;
     private LocalDateTime dataInicioEstacionamento;
     private LocalDateTime dataFinalEstacionamento;
-    private String idFormaPagamento;
-    private OrdemPagamentoDTO ordemPagamento;
-   
+    private Long idFormaPagamento;
 }
