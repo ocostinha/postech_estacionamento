@@ -6,20 +6,25 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 
 import java.time.LocalDateTime;
+import java.util.List;
 
 @Entity
-@Table(name="tb_areaAtuacao")
+@Table(name="tb_formaPagamento")
 @NoArgsConstructor
 @AllArgsConstructor
 @Data
-public class AreaAtuacaoEntity {
+public class FormaPagamentoEntity {
+
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
-    private String nomeArea;
-    private String cidade;
-    private String estado;
+    private String descricao;
+    private boolean aceitaValoresPreEstabelecidos;
+
+    @ElementCollection(targetClass=Double.class)
+    private List<Double> listaValores;
+
     private boolean ativo;
     private LocalDateTime dataCriacao;
-    private LocalDateTime dataUltimaModificacao;
+    private LocalDateTime dataUltimaAtualizacao;
 }
