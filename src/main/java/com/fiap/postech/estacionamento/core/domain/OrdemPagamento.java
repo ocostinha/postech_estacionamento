@@ -10,7 +10,7 @@ import java.util.UUID;
 public class OrdemPagamento {
 	private UUID id;
 	private String idUsuario;
-	private String idRegistroEstacionamento;
+	private String idEstacionamento;
 	private Double valorFinal;
 	private int status;
 }
