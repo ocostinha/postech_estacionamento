@@ -19,13 +19,17 @@ public class OrdemPagamentoService {
     @Autowired
     private OrdemPagamentoMapper mapper;
 
-    OrdemPagamento criarPagamento(Long idUsuario, UUID idEstacionamento) {
+    OrdemPagamento criarPagamentoPix(Long idUsuario, UUID idEstacionamento, Integer hoursParked) {
         return mapper.toDomain(
                 ordemPagamentoRepository.save(
                         mapper.build(
-                                idUsuario, idEstacionamento, formaPagamentoService.valorEstacionamentoPix()
+                                idUsuario, idEstacionamento, calcValue(formaPagamentoService.valorPix(), hoursParked)
                         )
                 )
         );
+    }
+
+    private Double calcValue(Double value, Integer hour) {
+        return value * hour;
     }
 }

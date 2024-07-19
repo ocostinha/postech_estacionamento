@@ -7,23 +7,24 @@ import com.fiap.postech.estacionamento.core.domain.FormaPagamento;
 import com.fiap.postech.estacionamento.resources.repository.FormaPagamentoRepository;
 import com.fiap.postech.estacionamento.resources.repository.entities.FormaPagamentoEntity;
 import jakarta.persistence.EntityNotFoundException;
-import lombok.AllArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 
-import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
 
 @Service
-@AllArgsConstructor
 public class FormaPagamentoService {
 
     @Autowired
-    private final FormaPagamentoRepository formaPagamentoRepository;
+    private FormaPagamentoRepository formaPagamentoRepository;
 
     @Autowired
-    private final FormaPagamentoMapper mapper;
+    private FormaPagamentoMapper mapper;
+
+    @Value("${id.pagamento.pix:1}")
+    private Long idPagamentoPix;
 
     public List<FormaPagamento> findAll() {
         List<FormaPagamentoEntity> formasPagamentos = formaPagamentoRepository.findByAtivo(true);
@@ -31,8 +32,8 @@ public class FormaPagamentoService {
     }
 
     public FormaPagamento save(FormaPagamento formaPagamento) {
-        if (!formaPagamento.isAceitaValoresPreEstabelecidos()) {
-            formaPagamento.setListaValores(new ArrayList<>());
+        if (!formaPagamento.getAceitaValorPreEstabelecido()) {
+            formaPagamento.setValor(0.0);
         }
 
         return mapper.toDomain(
@@ -66,8 +67,8 @@ public class FormaPagamentoService {
 
     public FormaPagamento update(Long id, FormaPagamento formaPagamento) {
         try {
-            if (!formaPagamento.isAceitaValoresPreEstabelecidos()) {
-                formaPagamento.setListaValores(new ArrayList<>());
+            if (!formaPagamento.getAceitaValorPreEstabelecido()) {
+                formaPagamento.setValor(0.0);
             }
 
             return mapper.toDomain(
@@ -80,10 +81,10 @@ public class FormaPagamentoService {
         }
     }
 
-    public Double valorEstacionamentoPix() {
+    public Double valorPix() {
         return formaPagamentoRepository
-                .findByDescricaoAndAtivo("PIX", true)
+                .findByIdAndAtivo(idPagamentoPix, true)
                 .orElseThrow(() -> new UnprocessableEntityException("Forma de pagamento PIX não encontrado"))
-                .getListaValores().getFirst();
+                .getValor();
     }
 }

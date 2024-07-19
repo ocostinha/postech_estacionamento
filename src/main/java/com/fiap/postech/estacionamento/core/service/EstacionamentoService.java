@@ -6,11 +6,14 @@ import com.fiap.postech.estacionamento.core.domain.Estacionamento;
 import com.fiap.postech.estacionamento.resources.repository.entities.EstacionamentoEntity;
 import com.fiap.postech.estacionamento.resources.repository.mongodb.EstacionamentoRepository;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 
+import java.time.Duration;
 import java.time.LocalDateTime;
 import java.util.List;
-import java.util.Optional;
+import java.util.Objects;
+import java.util.UUID;
 
 @Service
 public class EstacionamentoService {
@@ -23,51 +26,34 @@ public class EstacionamentoService {
     @Autowired
     private EstacionamentoMapper mapper;
 
-    @Autowired
-    private UsuarioService usuarioService;
-
-    @Autowired
-    private NotificacaoService notificacaoService;
-
-    @Autowired
-    private com.fiap.postech.estacionamento.Service.EmailService emailService;
+    @Value("${id.pagamento.pix:1}")
+    private Long idPagamentoPix;
 
     public Estacionamento registrar(Estacionamento estacionamento) {
-        Optional<EstacionamentoEntity> estacionamentoExistente = estacionamentoRepository
-                .findByPlacaVeiculoAndDataFinalEstacionamentoIsNull(estacionamento.getPlacaVeiculo());
+        estacionamentoRepository
+                .findByPlacaVeiculoAndFinalizado(estacionamento.getPlacaVeiculo(), false)
+                .ifPresent(it -> {
+                    throw new UnprocessableEntityException("Veículo já estacionado, verifique os dados.");
+                });
 
-        if (estacionamentoExistente.isPresent()) {
-            throw new UnprocessableEntityException(
-                    "Veículo já estacionado, verifique os dados.");
-        }
-
-        if (estacionamento.getDataFinalEstacionamento() != null && !estacionamento.getIdFormaPagamento().equals("PIX")) {
+        if (estacionamento.getDataFinalEstacionamento() != null &&
+                !Objects.equals(estacionamento.getIdFormaPagamento(), idPagamentoPix)) {
             throw new UnprocessableEntityException("Período fixo de estacionamento só pode ser pago via PIX");
         }
 
         EstacionamentoEntity entity = estacionamentoRepository.save(mapper.toEntity(estacionamento));
 
-        if ("PIX".equals(estacionamento.getIdFormaPagamento())) {
-            ordemPagamentoService.criarPagamento(entity.getIdUsuario(), entity.getId());
+        if (Objects.equals(estacionamento.getIdFormaPagamento(), idPagamentoPix)) {
+            Duration timeElapsed = Duration
+                    .between(entity.getDataInicioEstacionamento(), entity.getDataFinalEstacionamento());
+
+            ordemPagamentoService.criarPagamentoPix(entity.getIdUsuario(), entity.getId(), timeElapsed.toHoursPart());
         }
 
         return mapper.toDomain(entity);
     }
 
-    public void notifyExpirados() {
-        getExpirados(LocalDateTime.now().withSecond(59).minusMinutes(1)).forEach(estacionamento -> {
-            String email = usuarioService.getUserById(estacionamento.getIdUsuario()).getEmail();
-
-            emailService.sendEmail(
-                    email,
-                    "Tempo de Estacionamento Esgotado", "Seu tempo de estacionamento acabou."
-            );
-
-            notificacaoService.create(estacionamento.getId(), email);
-        });
-    }
-
-    private List<Estacionamento> getExpirados(LocalDateTime dateLimit) {
+    public List<Estacionamento> getExpirados(LocalDateTime dateLimit) {
         return estacionamentoRepository
                 .findByDataFinalEstacionamentoBeforeAndFinalizado(dateLimit, false)
                 .stream()
@@ -75,28 +61,18 @@ public class EstacionamentoService {
                 .toList();
     }
 
-    public void alertExpiracao() {
-        getFutureExpiration(
-                LocalDateTime.now().minusMinutes(50).withSecond(0),
-                LocalDateTime.now().minusMinutes(50).withSecond(59)
-        ).forEach(estacionamento -> {
-            String email = usuarioService.getUserById(estacionamento.getIdUsuario()).getEmail();
-
-            emailService.sendEmail(email,
-                    "Aviso de Expiração de Estacionamento",
-                    "Sua hora de estacionamento está prestes a expirar, " +
-                            "ela termirá em 10 minutos e será renovado automáticamente por mais uma hora!"
-            );
-
-            notificacaoService.create(estacionamento.getId(), email);
-        });
-    }
-
-    private List<Estacionamento> getFutureExpiration(LocalDateTime initialDate, LocalDateTime finalDate) {
+    public List<Estacionamento> getFutureExpiration(LocalDateTime initialDate, LocalDateTime finalDate) {
         return estacionamentoRepository
-                .findByDataInicioEstacionamentoBetweenAndFinalizado(initialDate, finalDate, false)
+                .findByDataFinalEstacionamentoBetweenAndFinalizado(initialDate, finalDate, false)
                 .stream()
                 .map(mapper::toDomain)
                 .toList();
+    }
+    public void addOneHourLimitPark(UUID id) {
+        estacionamentoRepository.findById(id).ifPresent(it -> {
+            it.setDataFinalEstacionamento(it.getDataInicioEstacionamento().plusHours(1));
+
+            estacionamentoRepository.save(it);
+        });
     }
 }

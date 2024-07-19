@@ -21,6 +21,10 @@ public interface EstacionamentoMapper {
     @Mapping(target = "ativo", constant = "true")
     @Mapping(target = "dataCriacao", defaultExpression = "java(LocalDateTime.now())")
     @Mapping(target= "dataUltimaAtualizacao", defaultExpression = "java(LocalDateTime.now())")
+    @Mapping(
+            target= "dataFinalEstacionamento",
+            defaultExpression = "java(domain.getDataInicioEstacionamento().plusHours(1))"
+    )
     EstacionamentoEntity toEntity(Estacionamento domain);
 
     @Mapping(target = "dataUltimaAtualizacao", expression = "java(LocalDateTime.now())")
