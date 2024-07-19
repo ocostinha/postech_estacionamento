@@ -6,7 +6,6 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 
 import java.time.LocalDateTime;
-import java.util.List;
 
 @Entity
 @Table(name="tb_formaPagamento")
@@ -19,12 +18,9 @@ public class FormaPagamentoEntity {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
     private String descricao;
-    private boolean aceitaValoresPreEstabelecidos;
-
-    @ElementCollection(targetClass=Double.class)
-    private List<Double> listaValores;
-
-    private boolean ativo;
+    private Boolean aceitaValorPreEstabelecido;
+    private Double valor;
+    private Boolean ativo;
     private LocalDateTime dataCriacao;
     private LocalDateTime dataUltimaAtualizacao;
 }

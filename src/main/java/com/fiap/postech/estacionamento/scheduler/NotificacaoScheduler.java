@@ -1,6 +1,6 @@
 package com.fiap.postech.estacionamento.scheduler;
 
-import com.fiap.postech.estacionamento.core.service.EstacionamentoService;
+import com.fiap.postech.estacionamento.core.service.NotificacaoService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Component;
@@ -8,16 +8,16 @@ import org.springframework.stereotype.Component;
 @Component
 public class NotificacaoScheduler {
     @Autowired
-    private EstacionamentoService estacionamentoService;
+    private NotificacaoService service;
 
     @Scheduled(cron = "0 * * * * *")
-    public void sendNotifications() {
-        estacionamentoService.notifyExpirados();
+    public void sendExpirationAlert() {
+        service.alertExpiration();
     }
 
     @Scheduled(cron = "0 * * * * *")
-    public void sendExpirationAlerts() {
-        estacionamentoService.alertExpiracao();
+    public void sendFutureExpirationAlerts() {
+        service.alertFutureExpiration();
     }
 }
 

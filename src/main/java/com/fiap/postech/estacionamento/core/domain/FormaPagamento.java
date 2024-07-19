@@ -4,16 +4,15 @@ import lombok.Getter;
 import lombok.Setter;
 
 import java.time.LocalDateTime;
-import java.util.List;
 
 @Setter
 @Getter
 public class FormaPagamento {
     private Long id;
     private String descricao;
-    private boolean aceitaValoresPreEstabelecidos;
-    private List<Double> listaValores;
-    private boolean ativo;
+    private Boolean aceitaValorPreEstabelecido;
+    private Double valor;
+    private Boolean ativo;
     private LocalDateTime dataCriacao;
     private LocalDateTime dataUltimaAtualizacao;
 }

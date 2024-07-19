@@ -15,6 +15,6 @@ public class Estacionamento {
 	private String idAreaEstacionamento;
 	private LocalDateTime dataInicioEstacionamento;
 	private LocalDateTime dataFinalEstacionamento;
-	private String idFormaPagamento;
+	private Long idFormaPagamento;
 	private Boolean finalizado;
 }
