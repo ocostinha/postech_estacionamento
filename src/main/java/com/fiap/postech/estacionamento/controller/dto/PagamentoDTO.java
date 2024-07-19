@@ -1,14 +1,12 @@
-package com.fiap.postech.estacionamento.core.domain;
+package com.fiap.postech.estacionamento.controller.dto;
 
 import lombok.Getter;
 import lombok.Setter;
 
-import java.util.UUID;
-
 @Getter
 @Setter
-public class OrdemPagamento {
-	private UUID id;
+public class PagamentoDTO {
+	private String id;
 	private String idUsuario;
 	private String idEstacionamento;
 	private Double valorFinal;

@@ -14,9 +14,16 @@ import static com.fiap.postech.estacionamento.commoms.mappers.utils.MappingUtils
 
 @Mapper(componentModel = "spring", uses = VeiculoMapper.class)
 public interface UsuarioMapper {
+    @Mapping(target = "id", ignore = true)
     @Mapping(target = "ativo", constant = "true")
+    @Mapping(target = "dataCriacao", ignore = true)
+    @Mapping(target = "dataUltimaModificacao", ignore = true)
     Usuario toDomain(UsuarioRequestDTO dto);
 
+    @Mapping(target = "dataCriacao", ignore = true)
+    @Mapping(target = "dataUltimaModificacao", ignore = true)
+    @Mapping(target = "senha", ignore = true)
+    @Mapping(target = "id", ignore = true)
     @Mapping(target = "ativo", constant = "true")
     Usuario toDomain(UsuarioAtualizacaoRequestDTO dto);
 
@@ -24,6 +31,7 @@ public interface UsuarioMapper {
 
     UsuarioResponseDTO toResponse(Usuario domain);
 
+    @Mapping(target = "idFormaPagamentoFavorita", ignore = true)
     UsuarioMinimalResponseDTO toMinimalResponse(Usuario domain);
 
     @Mapping(target = "dataCriacao", defaultExpression = LOCAL_DATE_TIME_NOW)

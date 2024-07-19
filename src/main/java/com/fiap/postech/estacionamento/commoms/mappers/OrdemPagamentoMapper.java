@@ -1,36 +1,39 @@
 package com.fiap.postech.estacionamento.commoms.mappers;
 
-import com.fiap.postech.estacionamento.controller.dto.OrdemPagamentoDTO;
-import com.fiap.postech.estacionamento.core.domain.OrdemPagamento;
-import com.fiap.postech.estacionamento.resources.repository.entities.OrdemPagamentoEntity;
+import com.fiap.postech.estacionamento.controller.dto.PagamentoDTO;
+import com.fiap.postech.estacionamento.core.domain.Pagamento;
+import com.fiap.postech.estacionamento.resources.repository.entities.PagamentoEntity;
 import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;
 import org.mapstruct.MappingTarget;
 
 import java.util.UUID;
 
+import static com.fiap.postech.estacionamento.commoms.mappers.utils.MappingUtils.LOCAL_DATE_TIME_NOW;
+import static com.fiap.postech.estacionamento.commoms.mappers.utils.MappingUtils.RANDOM_UUID;
+
 @Mapper(componentModel = "spring")
 public interface OrdemPagamentoMapper {
-    OrdemPagamento toDomain(OrdemPagamentoDTO dto);
+    Pagamento toDomain(PagamentoDTO dto);
 
-    OrdemPagamento toDomain(OrdemPagamentoEntity entity);
+    Pagamento toDomain(PagamentoEntity entity);
 
-    OrdemPagamentoDTO toDto(OrdemPagamento domain);
+    PagamentoDTO toDto(Pagamento domain);
 
 
-    @Mapping(target= "id", defaultExpression = "java(UUID.randomUUID())")
+    @Mapping(target= "id", expression = RANDOM_UUID)
     @Mapping(target= "status", constant = "0")
-    OrdemPagamentoEntity build(Long idUsuario, UUID idEstacionamento, Double valorFinal);
+    @Mapping(target = "dataCriacao", expression = LOCAL_DATE_TIME_NOW)
+    @Mapping(target= "dataUltimaAtualizacao", expression = LOCAL_DATE_TIME_NOW)
+    PagamentoEntity build(Long idUsuario, UUID idEstacionamento, Double valorFinal);
 
-    @Mapping(target = "ativo", constant = "true")
-    @Mapping(target = "dataCriacao", defaultExpression = "java(LocalDateTime.now())")
-    @Mapping(target= "dataUltimaAtualizacao", defaultExpression = "java(LocalDateTime.now())")
-    @Mapping(target= "id", defaultExpression = "java(UUID.randomUUID())")
-    OrdemPagamentoEntity toEntity(OrdemPagamento domain);
+    @Mapping(target = "dataCriacao", expression = LOCAL_DATE_TIME_NOW)
+    @Mapping(target= "dataUltimaAtualizacao", expression = LOCAL_DATE_TIME_NOW)
+    @Mapping(target= "id", defaultExpression = RANDOM_UUID)
+    PagamentoEntity toEntity(Pagamento domain);
 
-    @Mapping(target = "dataUltimaAtualizacao", expression = "java(LocalDateTime.now())")
+    @Mapping(target = "dataUltimaAtualizacao", expression = LOCAL_DATE_TIME_NOW)
     @Mapping(target = "id", ignore = true)
     @Mapping(target = "dataCriacao", ignore = true)
-    @Mapping(target = "ativo", ignore = true)
-    OrdemPagamentoEntity update(OrdemPagamento domain, @MappingTarget OrdemPagamentoEntity entity);
+    PagamentoEntity update(Pagamento domain, @MappingTarget PagamentoEntity entity);
 }

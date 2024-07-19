@@ -8,9 +8,12 @@ import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;
 import org.mapstruct.MappingTarget;
 
+import static com.fiap.postech.estacionamento.commoms.mappers.utils.MappingUtils.LOCAL_DATE_TIME_NOW;
+import static com.fiap.postech.estacionamento.commoms.mappers.utils.MappingUtils.RANDOM_UUID;
+
 @Mapper(componentModel = "spring")
 public interface EstacionamentoMapper {
-    @Mapping(target= "id", defaultExpression = "java(UUID.randomUUID())")
+    @Mapping(target= "id", expression = RANDOM_UUID)
     @Mapping(target = "finalizado", constant = "false")
     Estacionamento toDomain(EstacionamentoRequestDTO dto);
 
@@ -18,18 +21,17 @@ public interface EstacionamentoMapper {
 
     EstacionamentoResponseDTO toDto(Estacionamento domain);
 
-    @Mapping(target = "ativo", constant = "true")
-    @Mapping(target = "dataCriacao", defaultExpression = "java(LocalDateTime.now())")
-    @Mapping(target= "dataUltimaAtualizacao", defaultExpression = "java(LocalDateTime.now())")
+    @Mapping(target = "dataCriacao", expression = LOCAL_DATE_TIME_NOW)
+    @Mapping(target= "dataUltimaAtualizacao", expression = LOCAL_DATE_TIME_NOW)
     @Mapping(
             target= "dataFinalEstacionamento",
             defaultExpression = "java(domain.getDataInicioEstacionamento().plusHours(1))"
     )
     EstacionamentoEntity toEntity(Estacionamento domain);
 
-    @Mapping(target = "dataUltimaAtualizacao", expression = "java(LocalDateTime.now())")
+    @Mapping(target = "dataUltimaAtualizacao", expression = LOCAL_DATE_TIME_NOW)
     @Mapping(target = "id", ignore = true)
     @Mapping(target = "dataCriacao", ignore = true)
-    @Mapping(target = "ativo", ignore = true)
+    @Mapping(target = "finalizado", ignore = true)
     EstacionamentoEntity update(Estacionamento domain, @MappingTarget EstacionamentoEntity entity);
 }

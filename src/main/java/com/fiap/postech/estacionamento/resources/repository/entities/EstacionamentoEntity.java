@@ -19,4 +19,6 @@ public class EstacionamentoEntity {
     private LocalDateTime dataFinalEstacionamento;
     private Long idFormaPagamento;
     private Boolean finalizado;
+    private LocalDateTime dataCriacao;
+    private LocalDateTime dataUltimaAtualizacao;
 }

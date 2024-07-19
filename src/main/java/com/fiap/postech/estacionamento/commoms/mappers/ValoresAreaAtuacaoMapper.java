@@ -11,6 +11,10 @@ import static com.fiap.postech.estacionamento.commoms.mappers.utils.MappingUtils
 
 @Mapper(componentModel = "spring")
 public interface ValoresAreaAtuacaoMapper {
+    @Mapping(target = "id", ignore = true)
+    @Mapping(target = "dataFimVigencia", ignore = true)
+    @Mapping(target = "dataCriacao", ignore = true)
+    @Mapping(target = "dataUltimaModificacao", ignore = true)
     ValoresAreaAtuacao toDomain(ValoresAreaRequestDTO dto);
     ValoresAreaAtuacao toDomain(ValoresAreaAtuacaoEntity entity);
     ValoresAreaResponseDTO toResponse(ValoresAreaAtuacao domain);
