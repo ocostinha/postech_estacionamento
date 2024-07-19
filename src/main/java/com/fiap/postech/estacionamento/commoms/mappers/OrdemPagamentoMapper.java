@@ -20,7 +20,7 @@ public interface OrdemPagamentoMapper {
 
     @Mapping(target= "id", defaultExpression = "java(UUID.randomUUID())")
     @Mapping(target= "status", constant = "0")
-    OrdemPagamentoEntity build(Long idUsuario, UUID idRegistroEstacionamento, Double valorFinal);
+    OrdemPagamentoEntity build(Long idUsuario, UUID idEstacionamento, Double valorFinal);
 
     @Mapping(target = "ativo", constant = "true")
     @Mapping(target = "dataCriacao", defaultExpression = "java(LocalDateTime.now())")

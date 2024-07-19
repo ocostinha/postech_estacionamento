@@ -12,7 +12,7 @@ public class OrdemPagamentoEntity {
 	@MongoId
 	private UUID id;
 	private Long idUsuario;
-	private UUID idRegistroEstacionamento;
+	private UUID idEstacionamento;
 	private Double valorFinal;
 	private int status;
 }

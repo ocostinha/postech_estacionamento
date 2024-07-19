@@ -8,7 +8,7 @@ import lombok.Setter;
 public class OrdemPagamentoDTO {
 	private String id;
 	private String idUsuario;
-	private String idRegistroEstacionamento;
+	private String idEstacionamento;
 	private Double valorFinal;
 	private int status;
 }

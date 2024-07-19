@@ -8,7 +8,7 @@ import java.util.UUID;
 
 @Getter
 @Setter
-public class RegistroEstacionamentoResponseDTO {
+public class EstacionamentoResponseDTO {
     private UUID id;
     private Long idUsuario;
     private String placaVeiculo;
@@ -16,4 +16,5 @@ public class RegistroEstacionamentoResponseDTO {
     private LocalDateTime dataInicioEstacionamento;
     private LocalDateTime dataFinalEstacionamento;
     private Long idFormaPagamento;
+    private Boolean finalizado;
 }

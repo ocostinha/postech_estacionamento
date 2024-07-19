@@ -2,16 +2,18 @@ package com.fiap.postech.estacionamento.resources.repository.entities;
 
 
 import lombok.Data;
-import org.springframework.data.annotation.Id;
 import org.springframework.data.mongodb.core.mapping.Document;
+import org.springframework.data.mongodb.core.mapping.MongoId;
+
 import java.time.LocalDateTime;
+import java.util.UUID;
 
 @Data
 @Document(collection = "notificacoes")
 public class NotificacaoEntity {
-    @Id
-    private String id;
-    private String registroEstacionamentoId;
-    private String emailCliente;
+    @MongoId
+    private UUID id;
+    private UUID idEstacionamento;
+    private String email;
     private LocalDateTime dataEnvio;
 }

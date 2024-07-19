@@ -7,7 +7,7 @@ import java.time.LocalDateTime;
 
 @Getter
 @Setter
-public class RegistroEstacionamentoRequestDTO {
+public class EstacionamentoRequestDTO {
 	private Long idUsuario;
 	private String placaVeiculo;
 	private Long idAreaEstacionamento;
