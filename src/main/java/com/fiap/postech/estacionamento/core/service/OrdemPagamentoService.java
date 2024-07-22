@@ -29,6 +29,14 @@ public class OrdemPagamentoService {
         );
     }
 
+    public Pagamento findByEstacionamentoId(UUID areaAtuacaoId) {
+        return mapper.toDomain(pagamentoRepository.findByEstacionamentoId(areaAtuacaoId));
+    }
+
+    public void atualizarPagamento(Pagamento pagamento) {
+        mapper.toDomain(mapper.update(pagamento, mapper.toEntity(pagamento)));
+    }
+
     private Double calcValue(Double value, Integer hour) {
         return value * hour;
     }
