@@ -12,24 +12,24 @@ import java.util.List;
 
 @Getter
 @Setter
-public class UsuarioRequestDTO {
+public class UserRequestDTO {
     @NotBlank
-    private String nomeCompleto;
+    private String fullName;
 
     @NotBlank
-    private String documento;
+    private String document;
 
     @NotBlank
     private String email;
 
     @NotBlank
     @Size(min = 8, max = 12)
-    private String senha;
+    private String password;
 
     @NotNull
     @Valid
-    private List<VeiculoRequestDTO> veiculos;
+    private List<VehicleRequestDTO> vehicles;
 
     @NotNull
-    private String idFormaPagamento;
+    private String idPaymentMode;
 }

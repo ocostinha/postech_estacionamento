@@ -7,10 +7,10 @@ import lombok.Setter;
 
 @Getter
 @Setter
-public class VeiculoRequestDTO {
+public class VehicleRequestDTO {
     @NotBlank
-    private String modelo;
+    private String model;
 
     @NotBlank
-    private String placa;
+    private String licensePlate;
 }

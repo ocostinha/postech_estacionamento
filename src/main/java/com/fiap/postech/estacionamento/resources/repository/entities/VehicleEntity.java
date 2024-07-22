@@ -6,16 +6,16 @@ import lombok.Data;
 
 @Entity
 @Data
-public class VeiculoEntity {
+public class VehicleEntity {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    private String modelo;
-    private String placa;
+    private String model;
+    private String licensePlate;
 
     @ManyToOne
-    @JoinColumn(name = "usuario_id")
-    private UsuarioEntity usuario;
+    @JoinColumn(name = "user_id")
+    private UsuarioEntity user;
 }

@@ -13,25 +13,25 @@ public class UsuarioEntity {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name = "usuario_id")
+    @Column(name = "user_id")
     private Long id;
 
-    private String nomeCompleto;
-    private String documento;
+    private String fullName;
+    private String document;
 
     @Column(unique = true)
     private String email;
 
-    private String senha;
+    private String password;
 
     @OneToMany(cascade = CascadeType.ALL)
-    @JoinColumn(name = "usuario_id")
-    private List<VeiculoEntity> veiculos;
+    @JoinColumn(name = "user_id")
+    private List<VehicleEntity> vehicles;
 
-    private String idFormaPagamento;
+    private String idPaymentMode;
 
-    private LocalDateTime dataCriacao;
-    private LocalDateTime dataUltimaModificacao;
+    private LocalDateTime creationDate;
+    private LocalDateTime updatedDate;
 
-    private boolean ativo;
+    private boolean active;
 }

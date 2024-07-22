@@ -5,8 +5,8 @@ import lombok.Setter;
 
 @Getter
 @Setter
-public class Veiculo {
+public class Vehicle {
     private Long id;
-    private String modelo;
-    private String placa;
+    private String model;
+    private String licensePlate;
 }

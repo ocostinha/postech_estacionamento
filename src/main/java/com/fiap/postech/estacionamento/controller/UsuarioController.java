@@ -1,11 +1,11 @@
 package com.fiap.postech.estacionamento.controller;
 
 
-import com.fiap.postech.estacionamento.commoms.mappers.UsuarioMapper;
-import com.fiap.postech.estacionamento.controller.dto.UsuarioAtualizacaoRequestDTO;
-import com.fiap.postech.estacionamento.controller.dto.UsuarioMinimalResponseDTO;
-import com.fiap.postech.estacionamento.controller.dto.UsuarioRequestDTO;
-import com.fiap.postech.estacionamento.controller.dto.UsuarioResponseDTO;
+import com.fiap.postech.estacionamento.commoms.mappers.UserMapper;
+import com.fiap.postech.estacionamento.controller.dto.MinimalUserResponseDTO;
+import com.fiap.postech.estacionamento.controller.dto.UpdateUserRequestDTO;
+import com.fiap.postech.estacionamento.controller.dto.UserRequestDTO;
+import com.fiap.postech.estacionamento.controller.dto.UserResponseDTO;
 import com.fiap.postech.estacionamento.core.service.UsuarioService;
 import jakarta.validation.Valid;
 import lombok.AllArgsConstructor;
@@ -14,7 +14,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
 
 @RestController
-@RequestMapping("/usuarios")
+@RequestMapping("/users")
 @AllArgsConstructor
 public class UsuarioController {
 
@@ -22,13 +22,13 @@ public class UsuarioController {
     private final UsuarioService usuarioService;
 
     @Autowired
-    private final UsuarioMapper mapper;
+    private final UserMapper mapper;
 
     @PostMapping
     @ResponseStatus(HttpStatus.CREATED)
-    public UsuarioResponseDTO criarUsuario(@Valid @RequestBody UsuarioRequestDTO request) {
+    public UserResponseDTO createUser(@Valid @RequestBody UserRequestDTO request) {
         return mapper.toResponse(
-                usuarioService.criarUsuario(
+                usuarioService.create(
                         mapper.toDomain(request)
                 )
         );
@@ -36,40 +36,40 @@ public class UsuarioController {
 
     @GetMapping
     @ResponseStatus(HttpStatus.OK)
-    public UsuarioResponseDTO obterPorEmail(@RequestParam String email) {
-        return mapper.toResponse(usuarioService.obterPorEmail(email));
+    public UserResponseDTO getByEmail(@RequestParam String email) {
+        return mapper.toResponse(usuarioService.getByEmail(email));
     }
 
     @PostMapping("/login")
     @ResponseStatus(HttpStatus.OK)
-    public UsuarioResponseDTO login(@RequestParam String email, @RequestParam String senha) {
-        return mapper.toResponse(usuarioService.login(email, senha));
+    public UserResponseDTO login(@RequestParam String email, @RequestParam String password) {
+        return mapper.toResponse(usuarioService.login(email, password));
     }
 
     @PutMapping("/{id}")
     @ResponseStatus(HttpStatus.ACCEPTED)
-    public UsuarioResponseDTO atualizarUsuario(@PathVariable Long id, @Valid @RequestBody UsuarioAtualizacaoRequestDTO request) {
+    public UserResponseDTO update(@PathVariable Long id, @Valid @RequestBody UpdateUserRequestDTO request) {
         return mapper.toResponse(
-                    usuarioService.atualizarUsuario(id, mapper.toDomain(request)
+                    usuarioService.update(id, mapper.toDomain(request)
                 )
         );
     }
 
-    @PatchMapping("/{id}/senha")
+    @PatchMapping("/{id}/password")
     @ResponseStatus(HttpStatus.ACCEPTED)
-    public UsuarioResponseDTO trocarSenha(@PathVariable Long id, @RequestParam String novaSenha) {
-        return mapper.toResponse(usuarioService.trocarSenha(id, novaSenha));
+    public UserResponseDTO changePassword(@PathVariable Long id, @RequestParam String newPassword) {
+        return mapper.toResponse(usuarioService.changePassword(id, newPassword));
     }
 
     @GetMapping("/{id}")
     @ResponseStatus(HttpStatus.OK)
-    public UsuarioMinimalResponseDTO getUserById(@PathVariable Long id) {
+    public MinimalUserResponseDTO getUserById(@PathVariable Long id) {
         return mapper.toMinimalResponse(usuarioService.getUserById(id));
     }
 
     @DeleteMapping("/{id}")
     @ResponseStatus(HttpStatus.ACCEPTED)
-    public UsuarioResponseDTO desativar(@PathVariable Long id) {
-        return mapper.toResponse(usuarioService.desativar(id));
+    public UserResponseDTO disable(@PathVariable Long id) {
+        return mapper.toResponse(usuarioService.disable(id));
     }
 }

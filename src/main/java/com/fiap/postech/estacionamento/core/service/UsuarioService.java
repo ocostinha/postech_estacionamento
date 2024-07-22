@@ -1,9 +1,9 @@
 package com.fiap.postech.estacionamento.core.service;
 
 import com.fiap.postech.estacionamento.commoms.exception.NotFoundException;
-import com.fiap.postech.estacionamento.commoms.exception.UnauthorizedException;
-import com.fiap.postech.estacionamento.commoms.mappers.UsuarioMapper;
-import com.fiap.postech.estacionamento.core.domain.Usuario;
+import com.fiap.postech.estacionamento.commoms.exception.UnprocessableEntityException;
+import com.fiap.postech.estacionamento.commoms.mappers.UserMapper;
+import com.fiap.postech.estacionamento.core.domain.User;
 import com.fiap.postech.estacionamento.resources.repository.UsuarioRepository;
 import com.fiap.postech.estacionamento.resources.repository.entities.UsuarioEntity;
 import lombok.AllArgsConstructor;
@@ -19,61 +19,61 @@ public class UsuarioService {
     private final UsuarioRepository usuarioRepository;
 
     @Autowired
-    private final UsuarioMapper mapper;
+    private final UserMapper mapper;
 
-    public Usuario criarUsuario(Usuario usuario) {
+    public User create(User user) {
         return mapper.toDomain(
                 usuarioRepository.save(
-                        mapper.toEntity(usuario)
+                        mapper.toEntity(user)
                 )
         );
     }
 
-    public Usuario obterPorEmail(String email) {
+    public User getByEmail(String email) {
         return mapper.toDomain(
-                usuarioRepository.findByEmailAndAtivo(email, true)
+                usuarioRepository.findByEmailAndActive(email, true)
                         .orElseThrow(() -> new NotFoundException("Usuário não encontrado"))
         );
     }
 
-    public Usuario login(String email, String senha) {
+    public User login(String email, String password) {
         return mapper.toDomain(
-                usuarioRepository.findByEmailAndSenhaAndAtivo(email, senha, true)
-                        .orElseThrow(() -> new UnauthorizedException("Usuário ou senha inválido"))
+                usuarioRepository.findByEmailAndPasswordAndActive(email, password, true)
+                        .orElseThrow(() -> new UnprocessableEntityException("Usuário ou senha inválido"))
         );
     }
 
-    public Usuario atualizarUsuario(Long id, Usuario usuario) {
+    public User update(Long id, User user) {
         return mapper.toDomain(
                 usuarioRepository.save(
-                        mapper.update(usuario, usuarioRepository.findById(id)
-                                .orElseThrow(() -> new UnauthorizedException("Usuário não encontrado")))
+                        mapper.update(user, usuarioRepository.findById(id)
+                                .orElseThrow(() -> new UnprocessableEntityException("Usuário não encontrado")))
                 )
         );
     }
 
-    public Usuario trocarSenha(Long id, String novaSenha) {
+    public User changePassword(Long id, String newPassword) {
         UsuarioEntity usuario = usuarioRepository.findById(id)
-                .orElseThrow(() -> new UnauthorizedException("Usuário não encontrado"));
+                .orElseThrow(() -> new UnprocessableEntityException("Usuário não encontrado"));
 
-        usuario.setSenha(novaSenha);
+        usuario.setPassword(newPassword);
 
         return mapper.toDomain(usuarioRepository.save(usuario));
     }
 
     @Cacheable(value = "getUserById", key = "#id")
-    public Usuario getUserById(Long id) {
+    public User getUserById(Long id) {
         return mapper.toDomain(
-                usuarioRepository.findById(id)
-                        .orElseThrow(() -> new NotFoundException("Usuário não encontrado"))
+                usuarioRepository.findByIdAndActive(id, true)
+                        .orElseThrow(() -> new UnprocessableEntityException("Usuário não encontrado"))
         );
     }
 
-    public Usuario desativar(Long id) {
-        UsuarioEntity usuarioEntity = usuarioRepository.findById(id)
-                .orElseThrow(() -> new UnauthorizedException("Usuário não encontrado"));
+    public User disable(Long id) {
+        UsuarioEntity usuarioEntity = usuarioRepository.findByIdAndActive(id, true)
+                .orElseThrow(() -> new UnprocessableEntityException("Usuário não encontrado"));
 
-        usuarioEntity.setAtivo(false);
+        usuarioEntity.setActive(false);
 
         return mapper.toDomain(usuarioRepository.save(usuarioEntity));
     }

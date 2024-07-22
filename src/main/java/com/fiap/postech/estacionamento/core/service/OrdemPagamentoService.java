@@ -30,7 +30,7 @@ public class OrdemPagamentoService {
     }
 
     public Pagamento findByEstacionamentoId(UUID areaAtuacaoId) {
-        return mapper.toDomain(pagamentoRepository.findByEstacionamentoId(areaAtuacaoId));
+        return mapper.toDomain(pagamentoRepository.findByIdEstacionamento(areaAtuacaoId));
     }
 
     public void atualizarPagamento(Pagamento pagamento) {

@@ -11,20 +11,20 @@ import java.util.List;
 
 @Getter
 @Setter
-public class UsuarioAtualizacaoRequestDTO {
+public class UpdateUserRequestDTO {
     @NotBlank
-    private String nomeCompleto;
+    private String fullName;
 
     @NotBlank
-    private String documento;
+    private String document;
 
     @NotBlank
     private String email;
 
     @NotNull
     @Valid
-    private List<VeiculoRequestDTO> veiculos;
+    private List<VehicleRequestDTO> vehicles;
 
     @NotNull
-    private String idFormaPagamento;
+    private String idPaymentMode;
 }
