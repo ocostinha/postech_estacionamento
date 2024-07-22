@@ -48,7 +48,7 @@ public class NotificacaoService {
                     String subject;
                     String message;
 
-                    if (Objects.equals(estacionamento.getIdFormaPagamento(), idPagamentoPix)) {
+                    if (Objects.equals(estacionamento.getIdPaymentMode(), idPagamentoPix)) {
                         subject = "Tempo de Estacionamento Esgotado";
                         message = "Seu tempo de estacionamento acabou.";
                     } else {

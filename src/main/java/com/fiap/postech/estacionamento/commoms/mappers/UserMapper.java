@@ -5,7 +5,7 @@ import com.fiap.postech.estacionamento.controller.dto.UpdateUserRequestDTO;
 import com.fiap.postech.estacionamento.controller.dto.UserRequestDTO;
 import com.fiap.postech.estacionamento.controller.dto.UserResponseDTO;
 import com.fiap.postech.estacionamento.core.domain.User;
-import com.fiap.postech.estacionamento.resources.repository.entities.UsuarioEntity;
+import com.fiap.postech.estacionamento.resources.repository.entities.UserEntity;
 import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;
 import org.mapstruct.MappingTarget;
@@ -27,7 +27,7 @@ public interface UserMapper {
     @Mapping(target = "active", constant = "true")
     User toDomain(UpdateUserRequestDTO dto);
 
-    User toDomain(UsuarioEntity entity);
+    User toDomain(UserEntity entity);
 
     UserResponseDTO toResponse(User domain);
 
@@ -36,11 +36,11 @@ public interface UserMapper {
 
     @Mapping(target = "creationDate", defaultExpression = LOCAL_DATE_TIME_NOW)
     @Mapping(target = "updatedDate", defaultExpression = LOCAL_DATE_TIME_NOW)
-    UsuarioEntity toEntity(User domain);
+    UserEntity toEntity(User domain);
 
     @Mapping(target = "password", ignore = true)
     @Mapping(target = "id", ignore = true)
     @Mapping(target = "creationDate", ignore = true)
     @Mapping(target = "updatedDate", expression = LOCAL_DATE_TIME_NOW)
-    UsuarioEntity update(User domain, @MappingTarget UsuarioEntity entity);
+    UserEntity update(User domain, @MappingTarget UserEntity entity);
 }

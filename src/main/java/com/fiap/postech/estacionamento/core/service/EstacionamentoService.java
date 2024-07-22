@@ -3,9 +3,9 @@ package com.fiap.postech.estacionamento.core.service;
 import com.fiap.postech.estacionamento.commoms.exception.NotFoundException;
 import com.fiap.postech.estacionamento.commoms.exception.UnprocessableEntityException;
 import com.fiap.postech.estacionamento.commoms.mappers.EstacionamentoMapper;
+import com.fiap.postech.estacionamento.core.domain.ActuationAreaValue;
 import com.fiap.postech.estacionamento.core.domain.Estacionamento;
 import com.fiap.postech.estacionamento.core.domain.Pagamento;
-import com.fiap.postech.estacionamento.core.domain.ValoresAreaAtuacao;
 import com.fiap.postech.estacionamento.resources.repository.entities.EstacionamentoEntity;
 import com.fiap.postech.estacionamento.resources.repository.mongodb.EstacionamentoRepository;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -28,7 +28,7 @@ public class EstacionamentoService {
     private OrdemPagamentoService ordemPagamentoService;
 
     @Autowired
-    private ValoresAreaAtuacaoService valoresAreaAtuacaoService;
+    private ActuationAreaValueService ActuationAreaValueService;
 
     @Autowired
     private EstacionamentoMapper mapper;
@@ -44,13 +44,13 @@ public class EstacionamentoService {
                 });
 
         if (estacionamento.getDataFinalEstacionamento() != null &&
-                !Objects.equals(estacionamento.getIdFormaPagamento(), idPagamentoPix)) {
+                !Objects.equals(estacionamento.getIdPaymentMode(), idPagamentoPix)) {
             throw new UnprocessableEntityException("Período fixo de estacionamento só pode ser pago via PIX");
         }
 
         EstacionamentoEntity entity = estacionamentoRepository.save(mapper.toEntity(estacionamento));
 
-        if (Objects.equals(estacionamento.getIdFormaPagamento(), idPagamentoPix)) {
+        if (Objects.equals(estacionamento.getIdPaymentMode(), idPagamentoPix)) {
             Duration timeElapsed = Duration
                     .between(entity.getDataInicioEstacionamento(), entity.getDataFinalEstacionamento());
 
@@ -97,19 +97,19 @@ public class EstacionamentoService {
                             "finalização não tenha sido realizada.");
         }
 
-        ValoresAreaAtuacao valoresAreaAtuacao = valoresAreaAtuacaoService.consultarValoresPorArea(
+        ActuationAreaValue ActuationAreaValue = ActuationAreaValueService.consultardefaultValuesPorArea(
                 Long.valueOf(estacionamento.getIdAreaEstacionamento())).get(0);
 
-        if(valoresAreaAtuacao == null) {
-            throw new UnprocessableEntityException("Valores para a área de atuação não encontrados.");
+        if(ActuationAreaValue == null) {
+            throw new UnprocessableEntityException("defaultValues para a área de atuação não encontrados.");
         }
 
         Pagamento ordemPagamento = ordemPagamentoService.findByEstacionamentoId(estacionamento.getId());
 
         if(!Objects.equals(ordemPagamento.getId(), idPagamentoPix)) {
-            Double valorFinal = calcularValorEstacionamento(estacionamento.getDataInicioEstacionamento(), estacionamento.getDataFinalEstacionamento(), valoresAreaAtuacao.getValorPorHora());
+            Double defaultValueFinal = calculardefaultValuestacionamento(estacionamento.getDataInicioEstacionamento(), estacionamento.getDataFinalEstacionamento(), ActuationAreaValue.getDefaultValuePorHora());
 
-            ordemPagamentoService.criarPagamentoPix(estacionamento.getIdUsuario(), estacionamento.getId(), Integer.valueOf(String.valueOf(valorFinal)));
+            ordemPagamentoService.criarPagamentoPix(estacionamento.getIdUsuario(), estacionamento.getId(), Integer.valueOf(String.valueOf(defaultValueFinal)));
         }
 
         LocalDateTime dataFimAjustada = ajustarParaProximaHoraCompleta(dateTime);
@@ -125,7 +125,7 @@ public class EstacionamentoService {
         return data.plusHours(1).withMinute(0).withSecond(0).withNano(0);
     }
 
-    private Double calcularValorEstacionamento(LocalDateTime inicio, LocalDateTime fim, double valorPorHora) {
-        return (long) Math.ceil(Duration.between(inicio, fim).toMinutes() / 60.0) * valorPorHora;
+    private Double calculardefaultValuestacionamento(LocalDateTime inicio, LocalDateTime fim, double defaultValuePorHora) {
+        return (long) Math.ceil(Duration.between(inicio, fim).toMinutes() / 60.0) * defaultValuePorHora;
     }
 }

@@ -17,8 +17,8 @@ public class EstacionamentoEntity {
     private String idAreaEstacionamento;
     private LocalDateTime dataInicioEstacionamento;
     private LocalDateTime dataFinalEstacionamento;
-    private Long idFormaPagamento;
+    private Long idPaymentMode;
     private Boolean finalizado;
-    private LocalDateTime dataCriacao;
-    private LocalDateTime dataUltimaAtualizacao;
+    private LocalDateTime creationDate;
+    private LocalDateTime updatedDate;
 }

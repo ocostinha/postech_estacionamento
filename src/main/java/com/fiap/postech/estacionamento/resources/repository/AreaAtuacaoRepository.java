@@ -7,6 +7,6 @@ import java.util.List;
 import java.util.Optional;
 
 public interface AreaAtuacaoRepository extends JpaRepository<AreaAtuacaoEntity, Long> {
-    Optional<AreaAtuacaoEntity> findByIdAndAtivo(Long id, Boolean ativo);
-    List<AreaAtuacaoEntity> findByAtivo(Boolean ativo);
+    Optional<AreaAtuacaoEntity> findByIdAndActive(Long id, Boolean active);
+    List<AreaAtuacaoEntity> findByActive(Boolean active);
 }

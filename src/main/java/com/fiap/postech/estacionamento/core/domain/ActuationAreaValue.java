@@ -9,12 +9,12 @@ import java.time.LocalDateTime;
 @Getter
 @Setter
 @NoArgsConstructor
-public class ValoresAreaAtuacao {
+public class ActuationAreaValue {
 	private Long id;
 	private Long areaAtuacaoId;
-	private Double valorPorHora;
+	private Double defaultValuePorHora;
 	private LocalDateTime dataInicioVigencia;
 	private LocalDateTime dataFimVigencia;
-	private LocalDateTime dataCriacao;
+	private LocalDateTime creationDate;
 	private LocalDateTime dataUltimaModificacao;
 }

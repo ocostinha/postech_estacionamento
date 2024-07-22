@@ -25,7 +25,7 @@ public class AreaAtuacaoService {
     private final AreaAtuacaoMapper mapper;
 
     public List<AreaAtuacao> findAll() {
-        List<AreaAtuacaoEntity> areasAtuacoes = areaAtuacaoRepository.findByAtivo(true);
+        List<AreaAtuacaoEntity> areasAtuacoes = areaAtuacaoRepository.findByActive(true);
 
         if (areasAtuacoes.isEmpty()) {
             throw new NotFoundException("Nenhuma área de atuação encontrada");
@@ -36,13 +36,13 @@ public class AreaAtuacaoService {
 
     public AreaAtuacao findById(Long id) {
         return mapper.toDomain(
-                areaAtuacaoRepository.findByIdAndAtivo(id, true)
+                areaAtuacaoRepository.findByIdAndActive(id, true)
                         .orElseThrow(() ->
                                 new NotFoundException("Área de atuação não encontrada")));
     }
 
     public void validAreaAtuacao(Long id) {
-        areaAtuacaoRepository.findByIdAndAtivo(id, true)
+        areaAtuacaoRepository.findByIdAndActive(id, true)
                 .orElseThrow(() ->
                         new NotFoundException("Área de atuação não encontrada"));
     }
@@ -70,7 +70,7 @@ public class AreaAtuacaoService {
     public AreaAtuacao desativar(Long id) {
         try {
             AreaAtuacaoEntity areaAtuacaoEntity = areaAtuacaoRepository.getReferenceById(id);
-            areaAtuacaoEntity.setAtivo(false);
+            areaAtuacaoEntity.setActive(false);
 
             return mapper.toDomain(
                     areaAtuacaoRepository.save(

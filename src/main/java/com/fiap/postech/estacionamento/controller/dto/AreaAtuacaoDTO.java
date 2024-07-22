@@ -12,8 +12,8 @@ public record AreaAtuacaoDTO(
         String cidade,
         @NotBlank(message = "Estado é obrigatório")
         String estado,
-        boolean ativo,
-        LocalDateTime dataCriacao,
+        boolean active,
+        LocalDateTime creationDate,
         LocalDateTime dataUltimaModificacao
 ) {
 

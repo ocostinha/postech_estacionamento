@@ -17,5 +17,5 @@ public class VehicleEntity {
 
     @ManyToOne
     @JoinColumn(name = "user_id")
-    private UsuarioEntity user;
+    private UserEntity user;
 }

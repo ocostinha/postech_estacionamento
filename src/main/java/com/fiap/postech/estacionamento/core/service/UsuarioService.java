@@ -5,7 +5,7 @@ import com.fiap.postech.estacionamento.commoms.exception.UnprocessableEntityExce
 import com.fiap.postech.estacionamento.commoms.mappers.UserMapper;
 import com.fiap.postech.estacionamento.core.domain.User;
 import com.fiap.postech.estacionamento.resources.repository.UsuarioRepository;
-import com.fiap.postech.estacionamento.resources.repository.entities.UsuarioEntity;
+import com.fiap.postech.estacionamento.resources.repository.entities.UserEntity;
 import lombok.AllArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.cache.annotation.Cacheable;
@@ -53,7 +53,7 @@ public class UsuarioService {
     }
 
     public User changePassword(Long id, String newPassword) {
-        UsuarioEntity usuario = usuarioRepository.findById(id)
+        UserEntity usuario = usuarioRepository.findById(id)
                 .orElseThrow(() -> new UnprocessableEntityException("Usuário não encontrado"));
 
         usuario.setPassword(newPassword);
@@ -70,11 +70,11 @@ public class UsuarioService {
     }
 
     public User disable(Long id) {
-        UsuarioEntity usuarioEntity = usuarioRepository.findByIdAndActive(id, true)
+        UserEntity userEntity = usuarioRepository.findByIdAndActive(id, true)
                 .orElseThrow(() -> new UnprocessableEntityException("Usuário não encontrado"));
 
-        usuarioEntity.setActive(false);
+        userEntity.setActive(false);
 
-        return mapper.toDomain(usuarioRepository.save(usuarioEntity));
+        return mapper.toDomain(usuarioRepository.save(userEntity));
     }
 }

@@ -2,12 +2,12 @@ package com.fiap.postech.estacionamento.controller;
 
 import com.fiap.postech.estacionamento.commoms.exception.BadRequestException;
 import com.fiap.postech.estacionamento.commoms.exception.UnprocessableEntityException;
-import com.fiap.postech.estacionamento.commoms.mappers.ValoresAreaAtuacaoMapper;
-import com.fiap.postech.estacionamento.controller.dto.ValoresAreaRequestDTO;
-import com.fiap.postech.estacionamento.controller.dto.ValoresAreaResponseDTO;
-import com.fiap.postech.estacionamento.core.domain.ValoresAreaAtuacao;
+import com.fiap.postech.estacionamento.commoms.mappers.ActuationAreaValueMapper;
+import com.fiap.postech.estacionamento.controller.dto.DefaultValuesAreaRequestDTO;
+import com.fiap.postech.estacionamento.controller.dto.DefaultValuesAreaResponseDTO;
+import com.fiap.postech.estacionamento.core.domain.ActuationAreaValue;
+import com.fiap.postech.estacionamento.core.service.ActuationAreaValueService;
 import com.fiap.postech.estacionamento.core.service.AreaAtuacaoService;
-import com.fiap.postech.estacionamento.core.service.ValoresAreaAtuacaoService;
 import jakarta.validation.Valid;
 import lombok.AllArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -20,22 +20,22 @@ import java.util.ConcurrentModificationException;
 import java.util.List;
 
 @RestController
-@RequestMapping("/valores")
+@RequestMapping("/defaultValues")
 @AllArgsConstructor
-public class ValoresAreaAtuacaoController {
+public class ActuationAreaValueController {
 
     @Autowired
-    private final ValoresAreaAtuacaoService service;
+    private final ActuationAreaValueService service;
 
     @Autowired
     private final AreaAtuacaoService serviceAreaAtuacao;
 
     @Autowired
-    private final ValoresAreaAtuacaoMapper mapper;
+    private final ActuationAreaValueMapper mapper;
 
     @PostMapping
     @ResponseStatus(HttpStatus.CREATED)
-    public ValoresAreaResponseDTO cadastrarValor(@Valid @RequestBody ValoresAreaRequestDTO request) {
+    public DefaultValuesAreaResponseDTO cadastrardefaultValue(@Valid @RequestBody DefaultValuesAreaRequestDTO request) {
         if (LocalDateTime.now().plusDays(1).isAfter(request.getDataInicioVigencia())) {
             throw new BadRequestException("A data de inicio da vigencia deve ser maior que 24 horas contando de agora");
         }
@@ -43,33 +43,33 @@ public class ValoresAreaAtuacaoController {
         try {
             serviceAreaAtuacao.validAreaAtuacao(request.getAreaAtuacaoId());
         } catch (Exception ex) {
-            throw new UnprocessableEntityException("Não pode ser cadastrado um valor para area  não ativa");
+            throw new UnprocessableEntityException("Não pode ser cadastrado um defaultValue para area  não ativa");
         }
 
         return mapper.toResponse(
-                service.cadastrarValor(
+                service.cadastrardefaultValue(
                         mapper.toDomain(request)));
     }
 
     @GetMapping("/{id}")
     @ResponseStatus(HttpStatus.OK)
-    public ValoresAreaResponseDTO buscarValorPorId(@PathVariable Long id) {
-        return mapper.toResponse(service.consultarValorPorId(id));
+    public DefaultValuesAreaResponseDTO buscardefaultValuePorId(@PathVariable Long id) {
+        return mapper.toResponse(service.consultardefaultValuePorId(id));
     }
 
     @GetMapping("/area")
     @ResponseStatus(HttpStatus.OK)
-    public List<ValoresAreaResponseDTO> buscarValoresPorArea(@RequestParam Long areaAtuacaoId) {
-        List<ValoresAreaAtuacao> valores = service.consultarValoresPorArea(areaAtuacaoId);
-        if (valores.isEmpty()) {
-            throw new ConcurrentModificationException("Valores não encontrados para essa área");
+    public List<DefaultValuesAreaResponseDTO> buscardefaultValuesPorArea(@RequestParam Long areaAtuacaoId) {
+        List<ActuationAreaValue> defaultValues = service.consultardefaultValuesPorArea(areaAtuacaoId);
+        if (defaultValues.isEmpty()) {
+            throw new ConcurrentModificationException("defaultValues não encontrados para essa área");
         }
-        return valores.stream().map(mapper::toResponse).toList();
+        return defaultValues.stream().map(mapper::toResponse).toList();
     }
 
     @PatchMapping("/{id}")
-    public ValoresAreaResponseDTO atualizarDataFimVigencia(@PathVariable Long id,
-                                                           @RequestParam String dataFimVigencia) {
+    public DefaultValuesAreaResponseDTO atualizarDataFimVigencia(@PathVariable Long id,
+                                                                 @RequestParam String dataFimVigencia) {
         DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss");
         LocalDateTime dateTime = LocalDateTime.parse(dataFimVigencia, formatter);
 

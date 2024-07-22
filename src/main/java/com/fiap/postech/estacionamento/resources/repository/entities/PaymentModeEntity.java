@@ -1,6 +1,9 @@
 package com.fiap.postech.estacionamento.resources.repository.entities;
 
-import jakarta.persistence.*;
+import jakarta.persistence.Entity;
+import jakarta.persistence.GeneratedValue;
+import jakarta.persistence.GenerationType;
+import jakarta.persistence.Id;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -11,14 +14,15 @@ import java.time.LocalDateTime;
 @NoArgsConstructor
 @AllArgsConstructor
 @Data
-public class AreaAtuacaoEntity {
+public class PaymentModeEntity {
+
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
-    private String nomeArea;
-    private String cidade;
-    private String estado;
-    private boolean active;
+    private String description;
+    private Boolean defaultValueAccepted;
+    private Double defaultValue;
+    private Boolean active;
     private LocalDateTime creationDate;
-    private LocalDateTime dataUltimaModificacao;
+    private LocalDateTime updatedDate;
 }

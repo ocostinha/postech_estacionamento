@@ -21,17 +21,17 @@ public interface EstacionamentoMapper {
 
     EstacionamentoResponseDTO toDto(Estacionamento domain);
 
-    @Mapping(target = "dataCriacao", expression = LOCAL_DATE_TIME_NOW)
-    @Mapping(target= "dataUltimaAtualizacao", expression = LOCAL_DATE_TIME_NOW)
+    @Mapping(target = "creationDate", expression = LOCAL_DATE_TIME_NOW)
+    @Mapping(target= "updatedDate", expression = LOCAL_DATE_TIME_NOW)
     @Mapping(
             target= "dataFinalEstacionamento",
             defaultExpression = "java(domain.getDataInicioEstacionamento().plusHours(1))"
     )
     EstacionamentoEntity toEntity(Estacionamento domain);
 
-    @Mapping(target = "dataUltimaAtualizacao", expression = LOCAL_DATE_TIME_NOW)
+    @Mapping(target = "updatedDate", expression = LOCAL_DATE_TIME_NOW)
     @Mapping(target = "id", ignore = true)
-    @Mapping(target = "dataCriacao", ignore = true)
+    @Mapping(target = "creationDate", ignore = true)
     @Mapping(target = "finalizado", ignore = true)
     EstacionamentoEntity update(Estacionamento domain, @MappingTarget EstacionamentoEntity entity);
 }

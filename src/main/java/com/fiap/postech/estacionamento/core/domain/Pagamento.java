@@ -11,6 +11,6 @@ public class Pagamento {
 	private UUID id;
 	private String idUsuario;
 	private String idEstacionamento;
-	private Double valorFinal;
+	private Double defaultValueFinal;
 	private int status;
 }

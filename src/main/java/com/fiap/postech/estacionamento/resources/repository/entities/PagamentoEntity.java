@@ -14,8 +14,8 @@ public class PagamentoEntity {
 	private UUID id;
 	private Long idUsuario;
 	private UUID idEstacionamento;
-	private Double valorFinal;
+	private Double defaultValueFinal;
 	private int status;
-	private LocalDateTime dataCriacao;
-	private LocalDateTime dataUltimaAtualizacao;
+	private LocalDateTime creationDate;
+	private LocalDateTime updatedDate;
 }

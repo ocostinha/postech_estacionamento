@@ -10,13 +10,13 @@ import java.time.LocalDateTime;
 
 @Getter
 @Setter
-public class ValoresAreaRequestDTO {
+public class DefaultValuesAreaRequestDTO {
 	@NotNull
 	private Long areaAtuacaoId;
 
 	@NotNull
 	@Positive
-	private Double valorPorHora;
+	private Double defaultValuePorHora;
 
 	@Future
 	private LocalDateTime dataInicioVigencia;

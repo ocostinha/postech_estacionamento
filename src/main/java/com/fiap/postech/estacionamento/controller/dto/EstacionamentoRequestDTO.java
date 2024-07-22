@@ -13,5 +13,5 @@ public class EstacionamentoRequestDTO {
 	private Long idAreaEstacionamento;
 	private LocalDateTime dataInicioEstacionamento;
 	private LocalDateTime dataFinalEstacionamento;
-	private Long idFormaPagamento;
+	private Long idPaymentMode;
 }

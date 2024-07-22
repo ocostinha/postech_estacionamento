@@ -9,6 +9,6 @@ public class PagamentoDTO {
 	private String id;
 	private String idUsuario;
 	private String idEstacionamento;
-	private Double valorFinal;
+	private Double defaultValueFinal;
 	private int status;
 }

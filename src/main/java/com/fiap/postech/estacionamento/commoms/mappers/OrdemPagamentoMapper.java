@@ -23,17 +23,17 @@ public interface OrdemPagamentoMapper {
 
     @Mapping(target= "id", expression = RANDOM_UUID)
     @Mapping(target= "status", constant = "0")
-    @Mapping(target = "dataCriacao", expression = LOCAL_DATE_TIME_NOW)
-    @Mapping(target= "dataUltimaAtualizacao", expression = LOCAL_DATE_TIME_NOW)
-    PagamentoEntity build(Long idUsuario, UUID idEstacionamento, Double valorFinal);
+    @Mapping(target = "creationDate", expression = LOCAL_DATE_TIME_NOW)
+    @Mapping(target= "updatedDate", expression = LOCAL_DATE_TIME_NOW)
+    PagamentoEntity build(Long idUsuario, UUID idEstacionamento, Double defaultValueFinal);
 
-    @Mapping(target = "dataCriacao", expression = LOCAL_DATE_TIME_NOW)
-    @Mapping(target= "dataUltimaAtualizacao", expression = LOCAL_DATE_TIME_NOW)
+    @Mapping(target = "creationDate", expression = LOCAL_DATE_TIME_NOW)
+    @Mapping(target= "updatedDate", expression = LOCAL_DATE_TIME_NOW)
     @Mapping(target= "id", defaultExpression = RANDOM_UUID)
     PagamentoEntity toEntity(Pagamento domain);
 
-    @Mapping(target = "dataUltimaAtualizacao", expression = LOCAL_DATE_TIME_NOW)
+    @Mapping(target = "updatedDate", expression = LOCAL_DATE_TIME_NOW)
     @Mapping(target = "id", ignore = true)
-    @Mapping(target = "dataCriacao", ignore = true)
+    @Mapping(target = "creationDate", ignore = true)
     PagamentoEntity update(Pagamento domain, @MappingTarget PagamentoEntity entity);
 }

@@ -14,7 +14,7 @@ public class OrdemPagamentoService {
     private PagamentoRepository pagamentoRepository;
 
     @Autowired
-    private FormaPagamentoService formaPagamentoService;
+    private PaymentModeService PaymentModeService;
 
     @Autowired
     private OrdemPagamentoMapper mapper;
@@ -23,7 +23,7 @@ public class OrdemPagamentoService {
         return mapper.toDomain(
                 pagamentoRepository.save(
                         mapper.build(
-                                idUsuario, idEstacionamento, calcValue(formaPagamentoService.valorPix(), hoursParked)
+                                idUsuario, idEstacionamento, calcValue(PaymentModeService.defaultValuePix(), hoursParked)
                         )
                 )
         );

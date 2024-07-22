@@ -7,8 +7,8 @@ public record AreaAtuacao(
         String nome,
         String cidade,
         String estado,
-        boolean ativo,
-        LocalDateTime dataCriacao,
+        boolean active,
+        LocalDateTime creationDate,
         LocalDateTime dataUltimaModificacao
 ) {
 
