@@ -2,7 +2,7 @@ version: "3.7"
 
 services:
   mongodb:
-    container_name: mongodb
+    container_name: mongodb_estacionamento
     image: mongo:latest
     ports:
       - "27017:27017"
@@ -11,4 +11,12 @@ services:
       - MONGO_INITDB_ROOT_PASSWORD=admin-password
       - MONGO_INITDB_DATABASE=admin
     volumes:
-      - ./scripts/mong∑o/mongo-init.js:/docker-entrypoint-initdb.d/mongo-init.js:ro
+      - ./scripts/mongo/mongo-init.js:/docker-entrypoint-initdb.d/mongo-init.js:ro
+  postgres:
+    image: postgres:latest
+    volumes:
+      - ./scripts/postgres/postgres-init.sql:/docker-entrypoint-initdb.d/postgres-init.sql:ro
+    environment:
+      POSTGRES_PASSWORD: "3st4c10n4m3nt0"
+    ports:
+      - "5432:5432"

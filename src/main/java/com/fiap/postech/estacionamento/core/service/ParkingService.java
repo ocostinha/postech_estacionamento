@@ -45,9 +45,12 @@ public class ParkingService {
         ParkingEntity entity = repository.save(mapper.toEntity(parking));
 
         if (Objects.equals(parking.getIdPaymentMode(), idPixPayment)) {
-            Duration timeElapsed = Duration.between(entity.getInitialDate(), entity.getFinalDate());
 
-            ordemPagamentoService.createPayment(entity.getIdUser(), idPixPayment, entity.getId(), timeElapsed.toHoursPart());
+            ordemPagamentoService.createPayment(
+                    entity.getIdUser(),
+                    idPixPayment,
+                    entity.getId(),
+                    calcTime(entity.getInitialDate(), entity.getFinalDate()));
         }
 
         return mapper.toDomain(entity);
@@ -76,7 +79,7 @@ public class ParkingService {
         }
 
         try {
-            actuationAreaService.findById(parking.getIdAreaParking());
+            actuationAreaService.findById(parking.getIdActuationArea());
             paymentModeService.findById(parking.getIdPaymentMode());
         } catch (NotFoundException exception) {
             throw new UnprocessableEntityException(exception.getMessage());
@@ -107,8 +110,8 @@ public class ParkingService {
         });
     }
 
-    public Parking exitRegister(UUID id, LocalDateTime finalParking) {
-        Parking parking = exitValidate(id);
+    public Parking exitRegister(String licensePlate, LocalDateTime finalParking) {
+        Parking parking = exitValidate(licensePlate);
 
         parking.setFinalDate(adjustToNextHour(finalParking));
 
@@ -121,18 +124,12 @@ public class ParkingService {
         return mapper.toDomain(repository.save(mapper.toEntity(parking)));
     }
 
-    private Parking exitValidate(UUID id) {
-        Parking parking = mapper.toDomain(
-                repository.findById(id).orElseThrow(() ->
-                        new NotFoundException("Registro de estacionamento não encontrado.")));
-
-        if (!parking.getFinished()) {
-            throw new UnprocessableEntityException(
-                    "Só é permitido encerrar o registro de estacionamento de um veículo ao qual a " +
-                            "finalização não tenha sido realizada.");
-        }
-
-        return parking;
+    private Parking exitValidate(String licensePlate) {
+        return mapper.toDomain(
+                repository.findByLicensePlateAndFinalDateIsNotNull(licensePlate).orElseThrow(() ->
+                        new UnprocessableEntityException(
+                                "Registro de estacionamento não encontrado, valide se ele já foi pago ou finalizado.")
+                ));
     }
 
     private LocalDateTime adjustToNextHour(LocalDateTime data) {

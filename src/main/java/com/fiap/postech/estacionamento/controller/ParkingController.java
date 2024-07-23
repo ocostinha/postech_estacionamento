@@ -4,12 +4,12 @@ import com.fiap.postech.estacionamento.commoms.mappers.ParkingMapper;
 import com.fiap.postech.estacionamento.controller.dto.ParkingRequestDTO;
 import com.fiap.postech.estacionamento.controller.dto.ParkingResponseDTO;
 import com.fiap.postech.estacionamento.core.service.ParkingService;
+import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
 
 import java.time.LocalDateTime;
-import java.util.UUID;
 
 @RestController
 @RequestMapping("/parking")
@@ -22,7 +22,7 @@ public class ParkingController {
 
     @PostMapping
     @ResponseStatus(HttpStatus.CREATED)
-    public ParkingResponseDTO register(@RequestBody ParkingRequestDTO request) {
+    public ParkingResponseDTO register(@Valid @RequestBody ParkingRequestDTO request) {
         return mapper.toDto(
                 service.register(
                         mapper.toDomain(request)
@@ -30,14 +30,14 @@ public class ParkingController {
         );
     }
 
-    @PatchMapping("{id}")
+    @PatchMapping("/licensePlate/{licensePlate}")
     @ResponseStatus(HttpStatus.ACCEPTED)
     public ParkingResponseDTO exitRegister(
-            @PathVariable UUID id,
+            @PathVariable String licensePlate,
             @RequestParam LocalDateTime finalParkingDate
     ) {
         return mapper.toDto(
-                service.exitRegister(id, finalParkingDate)
+                service.exitRegister(licensePlate, finalParkingDate)
         );
     }
 }

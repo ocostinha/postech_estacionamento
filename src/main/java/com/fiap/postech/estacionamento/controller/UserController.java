@@ -16,7 +16,7 @@ import org.springframework.web.bind.annotation.*;
 @RestController
 @RequestMapping("/users")
 @AllArgsConstructor
-public class UsuarioController {
+public class UserController {
 
     @Autowired
     private final UserService userService;

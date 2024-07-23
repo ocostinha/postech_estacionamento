@@ -12,6 +12,7 @@ import java.util.UUID;
 @Repository
 public interface ParkingRepository extends MongoRepository<ParkingEntity, UUID> {
     Optional<ParkingEntity> findByLicensePlateAndFinished(String licensePlate, Boolean finished);
+    Optional<ParkingEntity> findByLicensePlateAndFinalDateIsNotNull(String licensePlate);
 
     List<ParkingEntity> findByFinalDateBeforeAndFinished(
             LocalDateTime finalDate,

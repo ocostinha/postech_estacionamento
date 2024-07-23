@@ -11,7 +11,7 @@ public class Pagamento {
 	private UUID id;
 	private Long idUser;
 	private Long idPaymentMode;
-	private String idParking;
+	private UUID idParking;
 	private Double defaultValueFinal;
 	private int status;
 }

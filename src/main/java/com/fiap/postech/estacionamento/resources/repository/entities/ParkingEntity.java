@@ -14,7 +14,7 @@ public class ParkingEntity {
     private UUID id;
     private Long idUser;
     private String licensePlate;
-    private Long idAreaParking;
+    private Long idActuationArea;
     private LocalDateTime initialDate;
     private LocalDateTime finalDate;
     private Long idPaymentMode;

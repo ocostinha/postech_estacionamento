@@ -4,6 +4,7 @@ import com.fiap.postech.estacionamento.commoms.exception.*;
 import jakarta.servlet.http.HttpServletRequest;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.http.converter.HttpMessageNotReadableException;
 import org.springframework.validation.FieldError;
 import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.MissingServletRequestParameterException;
@@ -106,6 +107,22 @@ public class ControllerExceptionHandler {
     @ResponseBody
     public StandardError methodArgumentTypeMismatchException(
             MethodArgumentTypeMismatchException e,
+            HttpServletRequest request) {
+        HttpStatus status = HttpStatus.BAD_REQUEST;
+        err.setTimestamp(Instant.now());
+        err.setStatus(status.value());
+        err.setError("Bad Request");
+        err.setMessage(e.getMessage());
+        err.setPath(request.getRequestURI());
+
+        return err;
+    }
+
+    @ExceptionHandler(HttpMessageNotReadableException.class)
+    @ResponseStatus(HttpStatus.BAD_REQUEST)
+    @ResponseBody
+    public StandardError httpMessageNotReadableException(
+            HttpMessageNotReadableException e,
             HttpServletRequest request) {
         HttpStatus status = HttpStatus.BAD_REQUEST;
         err.setTimestamp(Instant.now());
