@@ -12,8 +12,9 @@ import java.util.UUID;
 public class PagamentoEntity {
 	@MongoId
 	private UUID id;
-	private Long idUsuario;
-	private UUID idEstacionamento;
+	private Long idUser;
+	private Long idPaymentMode;
+	private UUID idParking;
 	private Double defaultValueFinal;
 	private int status;
 	private LocalDateTime creationDate;

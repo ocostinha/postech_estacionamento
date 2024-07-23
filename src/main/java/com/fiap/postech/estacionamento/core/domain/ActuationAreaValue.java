@@ -11,10 +11,10 @@ import java.time.LocalDateTime;
 @NoArgsConstructor
 public class ActuationAreaValue {
 	private Long id;
-	private Long areaAtuacaoId;
-	private Double defaultValuePorHora;
-	private LocalDateTime dataInicioVigencia;
-	private LocalDateTime dataFimVigencia;
+	private Long idActuationArea;
+	private Double defaultHourValue;
+	private LocalDateTime initialDate;
+	private LocalDateTime finalDate;
 	private LocalDateTime creationDate;
-	private LocalDateTime dataUltimaModificacao;
+	private LocalDateTime updatedDate;
 }

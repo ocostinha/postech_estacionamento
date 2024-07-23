@@ -8,17 +8,17 @@ import java.time.LocalDateTime;
 import java.util.UUID;
 
 @Data
-@Document(collection = "estacionamentos")
-public class EstacionamentoEntity {
+@Document
+public class ParkingEntity {
     @MongoId
     private UUID id;
-    private Long idUsuario;
-    private String placaVeiculo;
-    private String idAreaEstacionamento;
-    private LocalDateTime dataInicioEstacionamento;
-    private LocalDateTime dataFinalEstacionamento;
+    private Long idUser;
+    private String licensePlate;
+    private Long idAreaParking;
+    private LocalDateTime initialDate;
+    private LocalDateTime finalDate;
     private Long idPaymentMode;
-    private Boolean finalizado;
+    private Boolean finished;
     private LocalDateTime creationDate;
     private LocalDateTime updatedDate;
 }

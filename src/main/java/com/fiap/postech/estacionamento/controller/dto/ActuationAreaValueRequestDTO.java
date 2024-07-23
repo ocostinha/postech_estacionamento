@@ -10,14 +10,14 @@ import java.time.LocalDateTime;
 
 @Getter
 @Setter
-public class DefaultValuesAreaRequestDTO {
+public class ActuationAreaValueRequestDTO {
 	@NotNull
-	private Long areaAtuacaoId;
+	private Long idActuationArea;
 
 	@NotNull
 	@Positive
-	private Double defaultValuePorHora;
+	private Double defaultHourValue;
 
 	@Future
-	private LocalDateTime dataInicioVigencia;
+	private LocalDateTime initialDate;
 }

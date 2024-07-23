@@ -2,14 +2,14 @@ package com.fiap.postech.estacionamento.core.domain;
 
 import java.time.LocalDateTime;
 
-public record AreaAtuacao(
+public record ActuationArea(
         Long id,
-        String nome,
-        String cidade,
-        String estado,
+        String description,
+        String city,
+        String state,
         boolean active,
         LocalDateTime creationDate,
-        LocalDateTime dataUltimaModificacao
+        LocalDateTime updatedDate
 ) {
 
 }

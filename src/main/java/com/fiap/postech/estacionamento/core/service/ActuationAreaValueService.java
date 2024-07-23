@@ -19,46 +19,67 @@ public class ActuationAreaValueService {
 	private ActuationAreaValueRepository repository;
 
 	@Autowired
+	private ActuationAreaService actuationAreaService;
+
+	@Autowired
 	private ActuationAreaValueMapper mapper;
 
-	public ActuationAreaValue cadastrardefaultValue(ActuationAreaValue ActuationAreaValue) {
-		ActuationAreaValueEntity defaultValueExistente = repository
-				.findFirstByAreaAtuacaoIdAndDataFimVigenciaIsNull(ActuationAreaValue.getAreaAtuacaoId());
+	public ActuationAreaValue create(ActuationAreaValue actuationAreaValue) {
+		actuationAreaService.validAreaAtuacao(actuationAreaValue.getIdActuationArea());
 
-		if (defaultValueExistente != null) {
-			defaultValueExistente.setDataFimVigencia(ActuationAreaValue.getDataInicioVigencia().minusDays(1));
-			repository.save(defaultValueExistente);
+		if (LocalDateTime.now().plusDays(1).isAfter(actuationAreaValue.getInitialDate())) {
+			throw new UnprocessableEntityException(
+					"A data de inicio da vigencia deve ser maior que 24 horas contando de agora");
+		}
+
+		ActuationAreaValueEntity entity = repository
+				.findFirstByIdActuationAreaAndFinalDateIsNull(actuationAreaValue.getIdActuationArea());
+
+		if (entity != null) {
+			entity.setFinalDate(actuationAreaValue.getInitialDate().minusDays(1));
+
+			return mapper.toDomain(
+					repository.save(entity)
+			);
 		}
 
 		return mapper.toDomain(
 				repository.save(
-						mapper.toEntity(ActuationAreaValue)
+						mapper.toEntity(actuationAreaValue)
 				)
 		);
 	}
 
-	public ActuationAreaValue consultardefaultValuePorId(Long id) {
+	public ActuationAreaValue getById(Long id) {
 		return mapper.toDomain(repository.findById(id).orElseThrow(() ->
-				new NotFoundException("")));
+				new NotFoundException("Valor da área de atuação não encontrado.")));
 	}
 
-	public List<ActuationAreaValue> consultardefaultValuesPorArea(Long areaAtuacaoId) {
-		return repository.findByAreaAtuacaoId(areaAtuacaoId).stream().map(mapper::toDomain).toList();
-	}
+	public List<ActuationAreaValue> getByActuationArea(Long idActuationArea) {
+		List<ActuationAreaValueEntity> values = repository.findByIdActuationArea(idActuationArea);
 
-	public ActuationAreaValue atualizarDataFimVigencia(Long id, LocalDateTime dataFimVigencia) {
-		ActuationAreaValueEntity defaultValueRetornado = repository.findById(id).orElseThrow(() ->
-				new UnprocessableEntityException("defaultValue não encontrado"));
-
-		if (defaultValueRetornado.getDataInicioVigencia().isAfter(dataFimVigencia)) {
-			throw new UnprocessableEntityException("A data de término da vigencia deve ser maior que a data de inicio");
+		if (values.isEmpty()) {
+			throw new NotFoundException("Valores não encontrados para essa área");
 		}
 
-		defaultValueRetornado.setDataFimVigencia(dataFimVigencia);
-		defaultValueRetornado.setDataUltimaModificacao(LocalDateTime.now());
+		return values.stream().map(mapper::toDomain).toList();
+	}
 
-		repository.save(defaultValueRetornado);
+	public ActuationAreaValue updateFinalDate(Long id, LocalDateTime finalDate) {
+		if (LocalDateTime.now().plusDays(1).isAfter(finalDate)) {
+			throw new UnprocessableEntityException("A data de término da vigencia deve ser maior que 24 horas contando de agora");
+		}
 
-		return mapper.toDomain(defaultValueRetornado);
+		ActuationAreaValueEntity entity = repository.findById(id).orElseThrow(() ->
+				new UnprocessableEntityException("Valor da área de atuação não encontrado."));
+
+		if (entity.getInitialDate().isAfter(finalDate)) {
+			throw new UnprocessableEntityException("A data de término da vigencia deve ser maior que a data de inicio.");
+		}
+
+		entity.setFinalDate(finalDate);
+		entity.setUpdatedDate(LocalDateTime.now());
+
+		return mapper.toDomain(repository.save(entity));
 	}
 }

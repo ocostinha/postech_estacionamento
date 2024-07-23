@@ -20,12 +20,11 @@ public interface OrdemPagamentoMapper {
 
     PagamentoDTO toDto(Pagamento domain);
 
-
     @Mapping(target= "id", expression = RANDOM_UUID)
     @Mapping(target= "status", constant = "0")
     @Mapping(target = "creationDate", expression = LOCAL_DATE_TIME_NOW)
     @Mapping(target= "updatedDate", expression = LOCAL_DATE_TIME_NOW)
-    PagamentoEntity build(Long idUsuario, UUID idEstacionamento, Double defaultValueFinal);
+    PagamentoEntity build(Long idUser, Long idPaymentMode, UUID idParking, Double defaultValueFinal);
 
     @Mapping(target = "creationDate", expression = LOCAL_DATE_TIME_NOW)
     @Mapping(target= "updatedDate", expression = LOCAL_DATE_TIME_NOW)

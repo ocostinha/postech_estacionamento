@@ -7,8 +7,8 @@ import lombok.Setter;
 @Setter
 public class PagamentoDTO {
 	private String id;
-	private String idUsuario;
-	private String idEstacionamento;
+	private String idUser;
+	private String idParking;
 	private Double defaultValueFinal;
 	private int status;
 }

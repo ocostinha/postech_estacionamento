@@ -8,7 +8,7 @@ import java.util.List;
 
 @Repository
 public interface ActuationAreaValueRepository extends JpaRepository<ActuationAreaValueEntity, Long> {
-	List<ActuationAreaValueEntity> findByAreaAtuacaoId(Long areaAtuacaoId);
+	List<ActuationAreaValueEntity> findByIdActuationArea(Long idActuationArea);
 
-	ActuationAreaValueEntity findFirstByAreaAtuacaoIdAndDataFimVigenciaIsNull(Long areaAtuacaoId);
+	ActuationAreaValueEntity findFirstByIdActuationAreaAndFinalDateIsNull(Long idActuationArea);
 }

@@ -9,8 +9,9 @@ import java.util.UUID;
 @Setter
 public class Pagamento {
 	private UUID id;
-	private String idUsuario;
-	private String idEstacionamento;
+	private Long idUser;
+	private Long idPaymentMode;
+	private String idParking;
 	private Double defaultValueFinal;
 	private int status;
 }

@@ -11,7 +11,7 @@ import java.util.UUID;
 @Setter
 public class Notificacao {
     private String id;
-    private UUID idEstacionamento;
+    private UUID idParking;
     private String email;
     private LocalDateTime dataEnvio;
 }

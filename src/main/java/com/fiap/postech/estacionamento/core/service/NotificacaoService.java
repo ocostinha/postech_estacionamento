@@ -21,10 +21,10 @@ public class NotificacaoService {
     private NotificacaoMapper mapper;
 
     @Autowired
-    private EstacionamentoService estacionamentoService;
+    private ParkingService estacionamentoService;
 
     @Autowired
-    private UsuarioService usuarioService;
+    private UserService userService;
 
     @Autowired
     private EmailService emailService;
@@ -32,27 +32,27 @@ public class NotificacaoService {
     @Value("${id.pagamento.pix:1}")
     private Long idPagamentoPix;
 
-    private Notificacao create(UUID idEstacionamento, String email) {
+    private Notificacao create(UUID idParking, String email) {
         return mapper.toDomain(
                 repository.save(
-                        mapper.build(idEstacionamento, email)
+                        mapper.build(idParking, email)
                 )
         );
     }
 
     public void alertExpiration() {
         estacionamentoService
-                .getExpirados(LocalDateTime.now().withSecond(59).minusMinutes(1))
+                .getExpired(LocalDateTime.now().withSecond(59).minusMinutes(1))
                 .forEach(estacionamento -> {
-                    String email = usuarioService.getUserById(estacionamento.getIdUsuario()).getEmail();
+                    String email = userService.getUserById(estacionamento.getIdUser()).getEmail();
                     String subject;
                     String message;
 
                     if (Objects.equals(estacionamento.getIdPaymentMode(), idPagamentoPix)) {
-                        subject = "Tempo de Estacionamento Esgotado";
+                        subject = "Tempo de Parking Esgotado";
                         message = "Seu tempo de estacionamento acabou.";
                     } else {
-                        subject = "Tempo de Estacionamento Renovado";
+                        subject = "Tempo de Parking Renovado";
                         message = "Seu tempo de estacionamento foi renovado em mais uma hora.";
                         estacionamentoService.addOneHourLimitPark(estacionamento.getId());
                     }
@@ -72,10 +72,10 @@ public class NotificacaoService {
                 LocalDateTime.now().minusMinutes(50).withSecond(0),
                 LocalDateTime.now().minusMinutes(50).withSecond(59)
         ).forEach(estacionamento -> {
-            String email = usuarioService.getUserById(estacionamento.getIdUsuario()).getEmail();
+            String email = userService.getUserById(estacionamento.getIdUser()).getEmail();
 
             emailService.sendEmail(email,
-                    "Aviso de Expiração de Estacionamento",
+                    "Aviso de Expiração de Parking",
                     "Sua hora de estacionamento está prestes a expirar, " +
                             "ela termirá em 10 minutos e será renovado automáticamente por mais uma hora!"
             );

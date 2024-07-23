@@ -6,10 +6,12 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.FieldError;
 import org.springframework.web.bind.MethodArgumentNotValidException;
+import org.springframework.web.bind.MissingServletRequestParameterException;
 import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.ResponseStatus;
+import org.springframework.web.method.annotation.MethodArgumentTypeMismatchException;
 
 import java.time.Instant;
 import java.util.HashMap;
@@ -77,6 +79,38 @@ public class ControllerExceptionHandler {
         err.setTimestamp(Instant.now());
         err.setStatus(status.value());
         err.setError("Unauthorized");
+        err.setMessage(e.getMessage());
+        err.setPath(request.getRequestURI());
+
+        return err;
+    }
+
+    @ExceptionHandler(MissingServletRequestParameterException.class)
+    @ResponseStatus(HttpStatus.BAD_REQUEST)
+    @ResponseBody
+    public StandardError missingServletRequestParameterException(
+            MissingServletRequestParameterException e,
+            HttpServletRequest request) {
+        HttpStatus status = HttpStatus.BAD_REQUEST;
+        err.setTimestamp(Instant.now());
+        err.setStatus(status.value());
+        err.setError("Bad Request");
+        err.setMessage(e.getMessage());
+        err.setPath(request.getRequestURI());
+
+        return err;
+    }
+
+    @ExceptionHandler(MethodArgumentTypeMismatchException.class)
+    @ResponseStatus(HttpStatus.BAD_REQUEST)
+    @ResponseBody
+    public StandardError methodArgumentTypeMismatchException(
+            MethodArgumentTypeMismatchException e,
+            HttpServletRequest request) {
+        HttpStatus status = HttpStatus.BAD_REQUEST;
+        err.setTimestamp(Instant.now());
+        err.setStatus(status.value());
+        err.setError("Bad Request");
         err.setMessage(e.getMessage());
         err.setPath(request.getRequestURI());
 

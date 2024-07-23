@@ -9,12 +9,12 @@ import java.time.LocalDateTime;
 @Getter
 @Setter
 @NoArgsConstructor
-public class DefaultValuesAreaResponseDTO {
+public class ActuationAreaValueResponseDTO {
 	private Long id;
-	private Long areaAtuacaoId;
-	private Double defaultValuePorHora;
-	private LocalDateTime dataInicioVigencia;
-	private LocalDateTime dataFimVigencia;
+	private Long idActuationArea;
+	private Double defaultHourValue;
+	private LocalDateTime initialDate;
+	private LocalDateTime finalDate;
 	private LocalDateTime creationDate;
-	private LocalDateTime dataUltimaModificacao;
+	private LocalDateTime updatedDate;
 }

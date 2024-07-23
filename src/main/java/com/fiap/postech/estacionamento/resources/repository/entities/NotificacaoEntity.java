@@ -13,7 +13,7 @@ import java.util.UUID;
 public class NotificacaoEntity {
     @MongoId
     private UUID id;
-    private UUID idEstacionamento;
+    private UUID idParking;
     private String email;
     private LocalDateTime dataEnvio;
 }

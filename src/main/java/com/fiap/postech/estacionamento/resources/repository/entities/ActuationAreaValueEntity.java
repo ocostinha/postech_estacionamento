@@ -14,10 +14,10 @@ public class ActuationAreaValueEntity {
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	private Long id;
-	private double defaultValueHour;
-	private LocalDateTime dataInicioVigencia;
-	private LocalDateTime dataFimVigencia;
+	private double defaultHourValue;
+	private LocalDateTime initialDate;
+	private LocalDateTime finalDate;
 	private LocalDateTime creationDate;
-	private LocalDateTime dataUltimaModificacao;
-	private Long areaAtuacaoId;
+	private LocalDateTime updatedDate;
+	private Long idActuationArea;
 }

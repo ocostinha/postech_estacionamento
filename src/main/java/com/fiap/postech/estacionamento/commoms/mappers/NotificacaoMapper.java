@@ -16,5 +16,5 @@ public interface NotificacaoMapper {
 
     @Mapping(target="dataEnvio", expression = LOCAL_DATE_TIME_NOW)
     @Mapping(target="id", expression = RANDOM_UUID)
-    NotificacaoEntity build(UUID idEstacionamento, String email);
+    NotificacaoEntity build(UUID idParking, String email);
 }

@@ -2,19 +2,13 @@ package com.fiap.postech.estacionamento.controller.dto;
 
 import jakarta.validation.constraints.NotBlank;
 
-import java.time.LocalDateTime;
-
-public record AreaAtuacaoDTO(
-        Long id,
+public record ActuationAreaRequestDTO(
         @NotBlank(message = "Nome da área é obrigatório")
-        String nome,
+        String description,
         @NotBlank(message = "Cidade é obrigatória")
-        String cidade,
+        String city,
         @NotBlank(message = "Estado é obrigatório")
-        String estado,
-        boolean active,
-        LocalDateTime creationDate,
-        LocalDateTime dataUltimaModificacao
+        String state
 ) {
 
 }
