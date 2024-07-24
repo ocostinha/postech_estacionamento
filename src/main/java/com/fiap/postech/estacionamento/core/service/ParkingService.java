@@ -22,10 +22,13 @@ public class ParkingService {
     private ParkingRepository repository;
 
     @Autowired
-    private OrdemPagamentoService ordemPagamentoService;
+    private PaymentService paymentService;
 
     @Autowired
     private ActuationAreaService actuationAreaService;
+
+    @Autowired
+    private ActuationAreaValueService actuationAreaValueService;
 
     @Autowired
     private UserService userService;
@@ -36,7 +39,7 @@ public class ParkingService {
     @Autowired
     private ParkingMapper mapper;
 
-    @Value("${id.pagamento.pix:1}")
+    @Value("${id.payment.pix:1}")
     private Long idPixPayment;
 
     public Parking register(Parking parking) {
@@ -44,13 +47,19 @@ public class ParkingService {
 
         ParkingEntity entity = repository.save(mapper.toEntity(parking));
 
-        if (Objects.equals(parking.getIdPaymentMode(), idPixPayment)) {
+        paymentService.createPayment(
+                entity.getIdUser(),
+                idPixPayment,
+                entity.getId()
+        );
 
-            ordemPagamentoService.createPayment(
-                    entity.getIdUser(),
-                    idPixPayment,
+        if (Objects.equals(parking.getIdPaymentMode(), idPixPayment)) {
+            paymentService.liquidatePayment(
                     entity.getId(),
-                    calcTime(entity.getInitialDate(), entity.getFinalDate()));
+                    calcTime(entity.getInitialDate(), entity.getFinalDate()),
+                    actuationAreaValueService.getActiveValueForActuationArea(entity.getIdActuationArea()),
+                    userService.getUserById(entity.getIdUser()).getEmail()
+            );
         }
 
         return mapper.toDomain(entity);
@@ -111,29 +120,27 @@ public class ParkingService {
     }
 
     public Parking exitRegister(String licensePlate, LocalDateTime finalParking) {
-        Parking parking = exitValidate(licensePlate);
+        ParkingEntity parking = exitValidate(licensePlate);
 
-        parking.setFinalDate(adjustToNextHour(finalParking));
+        parking.setFinalDate(finalParking);
 
         if (!parking.getIdPaymentMode().equals(idPixPayment)) {
-            ordemPagamentoService.createPayment(
-                    parking.getIdUser(), parking.getIdPaymentMode(),
-                    parking.getId(), calcTime(parking.getInitialDate(), parking.getFinalDate()));
+            paymentService.liquidatePayment(
+                    parking.getId(),
+                    calcTime(parking.getInitialDate(), parking.getFinalDate()),
+                    actuationAreaValueService.getActiveValueForActuationArea(parking.getIdActuationArea()),
+                    userService.getUserById(parking.getIdUser()).getEmail()
+            );
         }
 
-        return mapper.toDomain(repository.save(mapper.toEntity(parking)));
+        return mapper.toDomain(repository.save(parking));
     }
 
-    private Parking exitValidate(String licensePlate) {
-        return mapper.toDomain(
-                repository.findByLicensePlateAndFinalDateIsNotNull(licensePlate).orElseThrow(() ->
-                        new UnprocessableEntityException(
-                                "Registro de estacionamento não encontrado, valide se ele já foi pago ou finalizado.")
-                ));
-    }
-
-    private LocalDateTime adjustToNextHour(LocalDateTime data) {
-        return data.plusHours(1).withMinute(0).withSecond(0).withNano(0);
+    private ParkingEntity exitValidate(String licensePlate) {
+        return repository.findByLicensePlateAndFinalDateIsNotNull(licensePlate).orElseThrow(() ->
+                new UnprocessableEntityException(
+                        "Registro de estacionamento não encontrado, valide se ele já foi pago ou finalizado.")
+        );
     }
 
     private Integer calcTime(LocalDateTime initialDate, LocalDateTime finalDate) {

@@ -20,8 +20,6 @@ public class PaymentModeEntity {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
     private String description;
-    private Boolean defaultValueAccepted;
-    private Double defaultValue;
     private Boolean active;
     private LocalDateTime creationDate;
     private LocalDateTime updatedDate;

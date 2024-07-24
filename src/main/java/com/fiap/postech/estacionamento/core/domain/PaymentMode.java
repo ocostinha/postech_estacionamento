@@ -10,8 +10,6 @@ import java.time.LocalDateTime;
 public class PaymentMode {
     private Long id;
     private String description;
-    private Boolean defaultValueAccepted;
-    private Double defaultValue;
     private Boolean active;
     private LocalDateTime creationDate;
     private LocalDateTime updatedDate;

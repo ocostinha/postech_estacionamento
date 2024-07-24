@@ -1,8 +1,8 @@
 package com.fiap.postech.estacionamento.commoms.mappers;
 
-import com.fiap.postech.estacionamento.controller.dto.PagamentoDTO;
-import com.fiap.postech.estacionamento.core.domain.Pagamento;
-import com.fiap.postech.estacionamento.resources.repository.entities.PagamentoEntity;
+import com.fiap.postech.estacionamento.controller.dto.PaymentDTO;
+import com.fiap.postech.estacionamento.core.domain.Payment;
+import com.fiap.postech.estacionamento.resources.repository.entities.PaymentEntity;
 import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;
 import org.mapstruct.MappingTarget;
@@ -13,26 +13,25 @@ import static com.fiap.postech.estacionamento.commoms.mappers.utils.MappingUtils
 import static com.fiap.postech.estacionamento.commoms.mappers.utils.MappingUtils.RANDOM_UUID;
 
 @Mapper(componentModel = "spring")
-public interface OrdemPagamentoMapper {
-    Pagamento toDomain(PagamentoDTO dto);
+public interface PaymentMapper {
+    Payment toDomain(PaymentDTO dto);
 
-    Pagamento toDomain(PagamentoEntity entity);
+    Payment toDomain(PaymentEntity entity);
 
-    PagamentoDTO toDto(Pagamento domain);
-
+    @Mapping(target = "value", ignore = true)
     @Mapping(target= "id", expression = RANDOM_UUID)
     @Mapping(target= "status", constant = "0")
     @Mapping(target = "creationDate", expression = LOCAL_DATE_TIME_NOW)
     @Mapping(target= "updatedDate", expression = LOCAL_DATE_TIME_NOW)
-    PagamentoEntity build(Long idUser, Long idPaymentMode, UUID idParking, Double defaultValueFinal);
+    PaymentEntity build(Long idUser, Long idPaymentMode, UUID idParking);
 
     @Mapping(target = "creationDate", expression = LOCAL_DATE_TIME_NOW)
     @Mapping(target= "updatedDate", expression = LOCAL_DATE_TIME_NOW)
     @Mapping(target= "id", defaultExpression = RANDOM_UUID)
-    PagamentoEntity toEntity(Pagamento domain);
+    PaymentEntity toEntity(Payment domain);
 
     @Mapping(target = "updatedDate", expression = LOCAL_DATE_TIME_NOW)
     @Mapping(target = "id", ignore = true)
     @Mapping(target = "creationDate", ignore = true)
-    PagamentoEntity update(Pagamento domain, @MappingTarget PagamentoEntity entity);
+    PaymentEntity update(Payment domain, @MappingTarget PaymentEntity entity);
 }

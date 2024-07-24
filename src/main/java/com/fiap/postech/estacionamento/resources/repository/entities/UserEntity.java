@@ -24,7 +24,7 @@ public class UserEntity {
 
     private String password;
 
-    @OneToMany(cascade = CascadeType.ALL)
+    @OneToMany(cascade = CascadeType.ALL, fetch = FetchType.EAGER)
     @JoinColumn(name = "user_id")
     private List<VehicleEntity> vehicles;
 

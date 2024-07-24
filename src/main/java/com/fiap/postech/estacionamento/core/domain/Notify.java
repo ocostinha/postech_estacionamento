@@ -9,9 +9,9 @@ import java.util.UUID;
 
 @Getter
 @Setter
-public class Notificacao {
+public class Notify {
     private String id;
     private UUID idParking;
     private String email;
-    private LocalDateTime dataEnvio;
+    private LocalDateTime sentDate;
 }

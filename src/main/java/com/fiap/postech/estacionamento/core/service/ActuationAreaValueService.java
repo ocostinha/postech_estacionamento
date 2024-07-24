@@ -65,6 +65,10 @@ public class ActuationAreaValueService {
 		return values.stream().map(mapper::toDomain).toList();
 	}
 
+	public Double getActiveValueForActuationArea(Long idActuationArea) {
+		return repository.findFirstByIdActuationAreaAndFinalDateIsNull(idActuationArea).getDefaultHourValue();
+	}
+
 	public ActuationAreaValue updateFinalDate(Long id, LocalDateTime finalDate) {
 		if (LocalDateTime.now().plusDays(1).isAfter(finalDate)) {
 			throw new UnprocessableEntityException("A data de término da vigencia deve ser maior que 24 horas contando de agora");

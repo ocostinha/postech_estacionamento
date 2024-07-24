@@ -1,8 +1,7 @@
 package com.fiap.postech.estacionamento.core.service;
 
-import com.fiap.postech.estacionamento.commoms.mappers.NotificacaoMapper;
-import com.fiap.postech.estacionamento.core.domain.Notificacao;
-import com.fiap.postech.estacionamento.resources.repository.mongodb.NotificacaoRepository;
+import com.fiap.postech.estacionamento.commoms.mappers.NotifyMapper;
+import com.fiap.postech.estacionamento.resources.repository.mongodb.NotifyRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
@@ -12,16 +11,16 @@ import java.util.Objects;
 import java.util.UUID;
 
 @Service
-public class NotificacaoService {
+public class NotifyService {
 
     @Autowired
-    private NotificacaoRepository repository;
+    private NotifyRepository repository;
 
     @Autowired
-    private NotificacaoMapper mapper;
+    private NotifyMapper mapper;
 
     @Autowired
-    private ParkingService estacionamentoService;
+    private ParkingService parkingService;
 
     @Autowired
     private UserService userService;
@@ -29,19 +28,17 @@ public class NotificacaoService {
     @Autowired
     private EmailService emailService;
 
-    @Value("${id.pagamento.pix:1}")
+    @Value("${id.payment.pix:1}")
     private Long idPagamentoPix;
 
-    private Notificacao create(UUID idParking, String email) {
-        return mapper.toDomain(
-                repository.save(
-                        mapper.build(idParking, email)
-                )
+    private void create(UUID idParking, String email) {
+        repository.save(
+                mapper.build(idParking, email)
         );
     }
 
     public void alertExpiration() {
-        estacionamentoService
+        parkingService
                 .getExpired(LocalDateTime.now().withSecond(59).minusMinutes(1))
                 .forEach(estacionamento -> {
                     String email = userService.getUserById(estacionamento.getIdUser()).getEmail();
@@ -49,12 +46,13 @@ public class NotificacaoService {
                     String message;
 
                     if (Objects.equals(estacionamento.getIdPaymentMode(), idPagamentoPix)) {
-                        subject = "Tempo de Parking Esgotado";
-                        message = "Seu tempo de estacionamento acabou.";
+                        subject = "Tempo de Estacionamento Esgotado";
+                        message = "Seu tempo de estacionamento acabou. Por favor, retire seu veículo";
                     } else {
-                        subject = "Tempo de Parking Renovado";
+                        subject = "Tempo de Estacionamento Renovado";
                         message = "Seu tempo de estacionamento foi renovado em mais uma hora.";
-                        estacionamentoService.addOneHourLimitPark(estacionamento.getId());
+
+                        parkingService.addOneHourLimitPark(estacionamento.getId());
                     }
 
                     emailService.sendEmail(
@@ -68,17 +66,24 @@ public class NotificacaoService {
     }
 
     public void alertFutureExpiration() {
-        estacionamentoService.getFutureExpiration(
+        parkingService.getFutureExpiration(
                 LocalDateTime.now().minusMinutes(50).withSecond(0),
                 LocalDateTime.now().minusMinutes(50).withSecond(59)
         ).forEach(estacionamento -> {
             String email = userService.getUserById(estacionamento.getIdUser()).getEmail();
 
-            emailService.sendEmail(email,
-                    "Aviso de Expiração de Parking",
-                    "Sua hora de estacionamento está prestes a expirar, " +
-                            "ela termirá em 10 minutos e será renovado automáticamente por mais uma hora!"
-            );
+            if (Objects.equals(estacionamento.getIdPaymentMode(), idPagamentoPix)) {
+                emailService.sendEmail(email,
+                        "Aviso de Expiração de Estacionamento",
+                        "Sua hora de estacionamento está prestes a expirar, programe-se para retirar seu veículo!"
+                );
+            } else {
+                emailService.sendEmail(email,
+                        "Aviso de Expiração de Estacionamento",
+                        "Sua hora de estacionamento está prestes a expirar, " +
+                                "ela termirá em 10 minutos e será renovado automáticamente por mais uma hora!"
+                );
+            }
 
             create(estacionamento.getId(), email);
         });

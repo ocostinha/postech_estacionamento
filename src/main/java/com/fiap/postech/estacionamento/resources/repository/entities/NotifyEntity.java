@@ -9,11 +9,11 @@ import java.time.LocalDateTime;
 import java.util.UUID;
 
 @Data
-@Document(collection = "notificacoes")
-public class NotificacaoEntity {
+@Document
+public class NotifyEntity {
     @MongoId
     private UUID id;
     private UUID idParking;
     private String email;
-    private LocalDateTime dataEnvio;
+    private LocalDateTime sentDate;
 }

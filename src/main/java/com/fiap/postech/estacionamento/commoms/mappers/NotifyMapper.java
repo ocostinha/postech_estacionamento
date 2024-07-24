@@ -1,7 +1,7 @@
 package com.fiap.postech.estacionamento.commoms.mappers;
 
-import com.fiap.postech.estacionamento.core.domain.Notificacao;
-import com.fiap.postech.estacionamento.resources.repository.entities.NotificacaoEntity;
+import com.fiap.postech.estacionamento.core.domain.Notify;
+import com.fiap.postech.estacionamento.resources.repository.entities.NotifyEntity;
 import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;
 
@@ -11,10 +11,10 @@ import static com.fiap.postech.estacionamento.commoms.mappers.utils.MappingUtils
 import static com.fiap.postech.estacionamento.commoms.mappers.utils.MappingUtils.RANDOM_UUID;
 
 @Mapper(componentModel = "spring")
-public interface NotificacaoMapper {
-    Notificacao toDomain(NotificacaoEntity entity);
+public interface NotifyMapper {
+    Notify toDomain(NotifyEntity entity);
 
-    @Mapping(target="dataEnvio", expression = LOCAL_DATE_TIME_NOW)
+    @Mapping(target="sentDate", expression = LOCAL_DATE_TIME_NOW)
     @Mapping(target="id", expression = RANDOM_UUID)
-    NotificacaoEntity build(UUID idParking, String email);
+    NotifyEntity build(UUID idParking, String email);
 }

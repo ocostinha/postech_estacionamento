@@ -7,8 +7,6 @@ public record PaymentModeDTO(
         Long id,
         @NotBlank(message = "Forma de pagamento é obrigatória")
         String description,
-        Boolean defaultValueAccepted,
-        Double defaultValue,
         Boolean active
 ) {
 }

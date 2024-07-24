@@ -8,14 +8,14 @@ import java.time.LocalDateTime;
 import java.util.UUID;
 
 @Data
-@Document(collection = "ordens_pagamento")
-public class PagamentoEntity {
+@Document
+public class PaymentEntity {
 	@MongoId
 	private UUID id;
 	private Long idUser;
 	private Long idPaymentMode;
 	private UUID idParking;
-	private Double defaultValueFinal;
+	private Double value;
 	private int status;
 	private LocalDateTime creationDate;
 	private LocalDateTime updatedDate;
